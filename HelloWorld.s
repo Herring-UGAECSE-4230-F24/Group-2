@@ -10,7 +10,7 @@
 @and then call linux to do it
 _start:     mov     R0, #1          @ 1 = StdOut
             ldr     R1, =helloworld @sting to print
-            mov     R2, #13         @length of out string
+            mov     R2, #26         @length of out string
             mov     R7, #4          @linux write system call
             svc     0               @call linux to print
 
@@ -22,4 +22,4 @@ _start:     mov     R0, #1          @ 1 = StdOut
             svc     0               @call linux to terminate
 
 .data
-helloworld: .ascii "Hello world!\n"
+helloworld: .ascii "Hello World from Group 2!\n"
