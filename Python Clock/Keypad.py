@@ -28,23 +28,27 @@ GPIO.setup(Y4, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 # Function to read rows and columns
 def readKeypad(rowNum, char):
     GPIO.output(rowNum, GPIO.HIGH)
-    If GPIO.input(Y1)==1:
-    curVal=char[0]
-    If GPIO.input(Y2)==1:
-    curVal=char[1]
-If GPIO.input(Y3)==1:
-    curVal=char[2]
-If GPIO.input(Y4)==1:
-    curVal=char[3]
-GPIO.output(rowNum,GPIO.LOW)
-return curVal
+    curVal = None
+    if GPIO.input(Y1)==0:
+        curVal=char[0]
+    if GPIO.input(Y2)==0:
+        curVal=char[1]
+    if GPIO.input(Y3)==0:
+        curVal=char[2]
+    if GPIO.input(Y4)==0:
+        curVal=char[3]
+    GPIO.output(rowNum,GPIO.LOW)
+    return curVal
 
 try:
     while True:
-        readKeypad(X1, ["1","2","3","A"])
-        readKeypad(X2, ["4","5","6","B"])
-        readKeypad(X3, ["7","8","9","C"])
-        readKeypad(X4, ["*","0","#","D"])
+        key = None
+        key = readKeypad(X1, ["1","2","3","A"]) or key
+        key = readKeypad(X2, ["4","5","6","B"]) or key
+        key = readKeypad(X3, ["7","8","9","C"]) or key
+        key = readKeypad(X4, ["*","0","#","D"]) or key
+        if key:
+            print("Key pressed: " + key + "\n")
         sleep(0.2)
 except KeyboardInterrupt:
     GPIO.cleanup()
