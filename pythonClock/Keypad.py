@@ -44,11 +44,12 @@ def readKeypad(rowNum, char):
 try:
     while True:
         key = None # Variable to store the key value to print
-        key = readKeypad(X1, ["1","2","3","A"])
-        key = readKeypad(X2, ["4","5","6","B"])
-        key = readKeypad(X3, ["7","8","9","C"])
-        key = readKeypad(X4, ["*","0","#","D"])
-        print("Key pressed: " + key + "\n") # Print the key value
-        sleep(0.2)
+        for X, row in [(X1, ["1","2","3","A"]), (X2, ["4","5","6","B"]),
+                       (X3, ["7","8","9","C"]), (X4, ["*","0","#","D"])]:
+            key = readKeypad(X, row)      
+            if key:
+                print("Key pressed: ", key) # Print the key value
+                sleep(0.2)
+                break
 except KeyboardInterrupt:
     GPIO.cleanup()
