@@ -11,7 +11,7 @@ X4 = 5
 # Column GPIOS
 Y1 = 6
 Y2 = 13
-Y3 = 19
+Y3 = 16
 Y4 = 26
 
 # Set up GPIOS
@@ -44,12 +44,11 @@ def readKeypad(rowNum, char):
 try:
     while True:
         key = None # Variable to store the key value to print
-        key = readKeypad(X1, ["1","2","3","A"]) or key
-        key = readKeypad(X2, ["4","5","6","B"]) or key
-        key = readKeypad(X3, ["7","8","9","C"]) or key
-        key = readKeypad(X4, ["*","0","#","D"]) or key
-        if key:
-            print("Key pressed: " + key + "\n") # Print the key value
+        key = readKeypad(X1, ["1","2","3","A"])
+        key = readKeypad(X2, ["4","5","6","B"])
+        key = readKeypad(X3, ["7","8","9","C"])
+        key = readKeypad(X4, ["*","0","#","D"])
+        print("Key pressed: " + key + "\n") # Print the key value
         sleep(0.2)
 except KeyboardInterrupt:
     GPIO.cleanup()
