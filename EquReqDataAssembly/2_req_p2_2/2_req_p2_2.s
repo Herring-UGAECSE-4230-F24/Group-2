@@ -11,5 +11,5 @@ sum	.req r0
 _start:	mov	val1, #0x25
 	mov	val2, #0x34
 	add	sum, val1, val2
-	.EQU sys_write r7, #1
-	.EQU sys_exit
+	MOV R7, #sys_exit
+    SWI #sys_restart_syscall

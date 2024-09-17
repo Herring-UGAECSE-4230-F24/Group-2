@@ -10,7 +10,7 @@
 	.text
 	.global _start
 _start:	ldr	r2, =our_fixed_data
-	ldrb	r0, [r2]
+	ldr	r0, [r2]
 	mov	r7, #1
 	svc	0
 

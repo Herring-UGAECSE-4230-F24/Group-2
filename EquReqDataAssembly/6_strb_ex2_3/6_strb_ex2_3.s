@@ -2,7 +2,9 @@
  	@ the last two instructions to show the contents of data_store in registers R2 and R3
 	@ Deliverable: What does the strb instruction do?
  	@ Deliverable: What does the .space compiler directive do?
-
+	
+	.include "classinclude.s"
+	
 	.global _start
 _start:
 	mov	r1, #0x99	@ r1 = 0x99
@@ -23,7 +25,11 @@ _start:
 
 	add	r6, r6, #1	@ r6 = r6 + 1
 	mov	r1, #0x12	@ r1 = 0x12
-	strb	r1, [r6]	
+	strb	r1, [r6]
+	
+	ldr r6, =data_store
+	ldr r2, [r6]
+	ldr r3, [r6, #4]
 
 	mov	r7, #1
 	svc	0

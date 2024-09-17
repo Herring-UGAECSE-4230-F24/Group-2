@@ -12,4 +12,4 @@ _start:
         MOV R1, #0x14
         ADD R0, R1, #0xA
         MOV R7, #sys_exit
-        SWI 0
+        SWI #sys_restart_syscall
