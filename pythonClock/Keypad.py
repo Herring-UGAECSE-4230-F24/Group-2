@@ -53,7 +53,7 @@ try:
 
         time.sleep(0.2)
         
-    # GPIOS being used 5, 6, 13, 16, 17, 22, 26, 27 for keypad 
+    # GPIOS being used 5, 6, 13, 19, 17, 22, 26, 27 for keypad 
     # GPIOS for the flip flog will be set up as outputs
     # clock pulse to update the display. Cloc has orange wire.
     # Maybe use the top left of chip for the high/low turn on/off seven segment

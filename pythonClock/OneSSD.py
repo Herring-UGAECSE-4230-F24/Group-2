@@ -11,7 +11,7 @@ X4 = 5
 # Column GPIOS
 Y1 = 6
 Y2 = 13
-Y3 = 16
+Y3 = 19
 Y4 = 26
 
 # Set up GPIOS for keypad
@@ -31,13 +31,43 @@ GPIO.setup(Y4, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 # GPIOS for the flip flop will be set up as outputs
 # clock pulse to update the display. Clock has orange wire.
 # Maybe use the top left of chip for the high/low turn on/off seven segment
-Q1 = 
-Q2 = 
-Q3 = 
-Q4 = 
-Q5 = 
-Q6 = 
-Q7 = 
+Q1 = 25
+Q2 = 12
+Q3 = 16
+Q4 = 20
+Q5 = 24
+Q6 = 23
+Q7 = 18
+Clock = 21
+GPIO.setup(Q1, GPIO.OUT)
+GPIO.setup(Q2, GPIO.OUT)
+GPIO.setup(Q3, GPIO.OUT)
+GPIO.setup(Q4, GPIO.OUT)
+GPIO.setup(Q5, GPIO.OUT)
+GPIO.setup(Q6, GPIO.OUT)
+GPIO.setup(Q7, GPIO.OUT)
+GPIO.setup(Clock, GPIO.OUT)
+#Wire labels
+#A - 2
+#B - 1
+#C - 7
+#D - 6
+#E - 5
+#F - 3
+#G - 4 
+
+display_dict = {"0": ["A", "B", "C", "D", "E", "F"], 
+                "1": ["B", "C"], 
+                "2": ["A", "B", "G", "E", "D"], 
+                "3": ["A", "B", "G", "C", "D"], 
+                "4": ["F", "G", "B", "C"], 
+                "5": ["A", "F", "G", "C", "D"], 
+                "6": ["F", "G", "C", "D", "E"], 
+                "7": ["A", "B", "C"], 
+                "8": ["A", "B", "C", "D", "E", "F", "G"], 
+                "9": ["A", "B", "C", "D", "F", "G"]}
+
+letters_dict = {"A": Q2, "B": Q1, "C": Q7, "D": Q6, "E": Q5, "F": Q3, "G": Q4}
 
 # Function to read rows and columns
 def readKeypad(rowNum, char):
@@ -55,7 +85,12 @@ def readKeypad(rowNum, char):
     return curVal
 
 def display_SSD(char):
-
+    letters = display_dict[char]
+    for l in letters_dict:
+        if l in letters:
+            GPIO.output(letters_dict[l], GPIO.HIGH)
+        else:
+            GPIO.output(letters_dict[l], GPIO.LOW)
 
 try:
     while True:
@@ -64,7 +99,8 @@ try:
             if key != None:
                 print(key)
                 break
-        display_SSD(key)
+        if key in ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]:
+            display_SSD(key)
 
         time.sleep(0.2)
 except KeyboardInterrupt:
