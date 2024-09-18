@@ -14,7 +14,7 @@ Y2 = 13
 Y3 = 16
 Y4 = 26
 
-# Set up GPIOS
+# Set up GPIOS for keypad
 GPIO.setwarnings(False)
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(X1, GPIO.OUT)
@@ -25,6 +25,8 @@ GPIO.setup(Y1, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 GPIO.setup(Y2, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 GPIO.setup(Y3, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 GPIO.setup(Y4, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+
+# GPIOS for the flip flop
 
 # Function to read rows and columns
 def readKeypad(rowNum, char):
@@ -50,5 +52,10 @@ try:
                 break
 
         time.sleep(0.2)
+        
+    # GPIOS being used 5, 6, 13, 16, 17, 22, 26, 27 for keypad 
+    # GPIOS for the flip flog will be set up as outputs
+    # clock pulse to update the display. Cloc has orange wire.
+    # Maybe use the top left of chip for the high/low turn on/off seven segment
 except KeyboardInterrupt:
     GPIO.cleanup()
