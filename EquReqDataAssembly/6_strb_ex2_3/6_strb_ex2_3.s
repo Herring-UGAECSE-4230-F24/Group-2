@@ -3,8 +3,6 @@
 	@ Deliverable: What does the strb instruction do?
  	@ Deliverable: What does the .space compiler directive do?
 	
-	.include "classinclude.s"
-	
 	.global _start
 _start:
 	mov	r1, #0x99	@ r1 = 0x99
