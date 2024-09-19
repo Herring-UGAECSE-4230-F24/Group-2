@@ -27,9 +27,8 @@ _start:
 	mov	r1, #0x12	@ r1 = 0x12
 	strb	r1, [r6]
 	
-	ldr r6, =data_store
-	ldr r2, [r6]
-	ldr r3, [r6, #4]
+	ldr r2, [r6, #-4]
+	ldr r3, [r6, #0]
 
 	mov	r7, #1
 	svc	0
