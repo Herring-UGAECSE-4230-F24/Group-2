@@ -38,7 +38,10 @@ Q4 = 20
 Q5 = 24
 Q6 = 23
 Q7 = 18
+Q8 = 14
 Clock = 21
+DisPower = 15
+
 GPIO.setup(Q1, GPIO.OUT)
 GPIO.setup(Q2, GPIO.OUT)
 GPIO.setup(Q3, GPIO.OUT)
@@ -46,7 +49,11 @@ GPIO.setup(Q4, GPIO.OUT)
 GPIO.setup(Q5, GPIO.OUT)
 GPIO.setup(Q6, GPIO.OUT)
 GPIO.setup(Q7, GPIO.OUT)
+GPIO.setup(Q8, GPIO.OUT)
 GPIO.setup(Clock, GPIO.OUT)
+GPIO.setup(DisPower, GPIO.OUT)
+GPIO.output(DisPower, GPIO.LOW)
+
 #Wire labels
 #A - 2
 #B - 1
@@ -56,24 +63,32 @@ GPIO.setup(Clock, GPIO.OUT)
 #F - 3
 #G - 4 
 
-display_dict = {"0": ["A", "B", "C", "D", "E", "F"], 
+# Variable for on/off function
+on = False
+
+# Remember last variable
+last = None
+
+display_dict = {"0": ["A", "B", "C", "D", "E", "F"], # To display each number
                 "1": ["B", "C"], 
                 "2": ["A", "B", "G", "E", "D"], 
                 "3": ["A", "B", "G", "C", "D"], 
                 "4": ["F", "G", "B", "C"], 
                 "5": ["A", "F", "G", "C", "D"], 
-                "6": ["F", "G", "C", "D", "E"], 
+                "6": ["A", "F", "G", "C", "D", "E"], 
                 "7": ["A", "B", "C"], 
                 "8": ["A", "B", "C", "D", "E", "F", "G"], 
-                "9": ["A", "B", "C", "D", "F", "G"]}
+                "9": ["A", "B", "C", "D", "F", "G"],
+                "D": ["B", "C", "D", "E", "G"],
+                "*": ["."]}
 
-letters_dict = {"A": Q2, "B": Q1, "C": Q7, "D": Q6, "E": Q5, "F": Q3, "G": Q4}
+letters_dict = {"A": Q2, "B": Q1, "C": Q7, "D": Q6, "E": Q5, "F": Q3, "G": Q4, ".": Q8}
 
 # Function to read rows and columns
 def readKeypad(rowNum, char):
     curVal = None
     GPIO.output(rowNum, GPIO.LOW)
-    if GPIO.input(Y1)==GPIO.LOW: # If button pressed, input is HIGH
+    if GPIO.input(Y1)==GPIO.LOW: # If button pressed, input is LOW
         curVal=char[0]
     elif GPIO.input(Y2)==GPIO.LOW:
         curVal=char[1]
@@ -99,9 +114,32 @@ try:
             if key != None:
                 print(key)
                 break
-        if key in ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]:
+        if on == True and key in ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "D", "*"]:
             display_SSD(key)
+            GPIO.output(Clock, GPIO.HIGH)
+            GPIO.output(Clock, GPIO.LOW)
+            last = key
 
-        time.sleep(0.2)
+        if key == "#":
+            on = not on
+            if on == True:
+                GPIO.output(DisPower, GPIO.HIGH)
+                if last != None:
+                    display_SSD(last)
+                    GPIO.output(Clock, GPIO.HIGH)
+                    GPIO.output(Clock, GPIO.LOW)
+            else:
+                GPIO.output(DisPower, GPIO.LOW)
+                GPIO.output(Q1, GPIO.LOW)
+                GPIO.output(Q2, GPIO.LOW)
+                GPIO.output(Q3, GPIO.LOW)
+                GPIO.output(Q4, GPIO.LOW)
+                GPIO.output(Q5, GPIO.LOW)
+                GPIO.output(Q6, GPIO.LOW)
+                GPIO.output(Q7, GPIO.LOW)
+                GPIO.output(Q8, GPIO.LOW)
+
+        time.sleep(0.15)
+
 except KeyboardInterrupt:
     GPIO.cleanup()
