@@ -5,8 +5,9 @@
 @Deliverable 4: change ldrh to ldr.  Rerun the program.  What is the value of R0?  Explain the difference in ldrb, ldrh, and ldr.
 @Deliverable 5: What would you add to our_fixed_data to read the values in the .word line?  the .hword line?  Try ldr r0, [r2, #8].  What is r0?
 
-@Deliverable 3: Use the include file.
+@Deliverable 6: Use the include file.
 
+.include "classinclude.s"
 	.text
 	.global _start
 _start:	ldr	r2, =our_fixed_data
