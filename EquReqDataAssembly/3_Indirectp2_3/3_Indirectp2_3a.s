@@ -11,8 +11,8 @@
 	.global _start
 _start:	ldr	r2, =our_fixed_data
 	ldr	r0, [r2]
-	mov	r7, #1
-	svc	0
+	mov	r7, #sys_exit
+	svc	#sys_restart_syscall
 
 our_fixed_data:
 	.byte	0x55, 0x33, 1, 2, 3, 4, 5, 6
