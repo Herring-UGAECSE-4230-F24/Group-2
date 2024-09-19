@@ -12,4 +12,4 @@ _start:	mov	val1, #0x25
 	mov	val2, #0x34
 	add	sum, val1, val2
 	MOV R7, #sys_exit
-    SWI #sys_restart_syscall
+    	SWI #sys_restart_syscall
