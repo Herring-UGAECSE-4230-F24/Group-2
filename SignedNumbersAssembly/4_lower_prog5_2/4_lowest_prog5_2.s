@@ -24,7 +24,7 @@ loop:
       	beq  	done        @ if r3 is zero, done
       	ldrsb 	r1, [r0]    @ bring next number into r1 and sign extend it
       	cmp  	r1, r2      @ compare r1 and r2
-      	movlt	r2, r1      @ if r1 is smaller, keep it in r2
+      	movgt	r2, r1      @ if r1 is smaller, keep it in r2
       	b    	loop
 done: 	
 	ldr  	r0, =lowest @ r0 = address of lowest
