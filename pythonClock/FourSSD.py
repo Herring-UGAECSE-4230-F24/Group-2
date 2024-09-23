@@ -43,7 +43,8 @@ Clock1 = 21
 Clock2 = #
 Clock3 = #
 Clock4 = #
-DisPower = 15
+#DisPower = 15
+LED = # Invalid Entry LED GPIO
 
 GPIO.setup(Q1, GPIO.OUT)
 GPIO.setup(Q2, GPIO.OUT)
@@ -57,8 +58,9 @@ GPIO.setup(Clock1, GPIO.OUT)
 GPIO.setup(Clock2, GPIO.OUT)
 GPIO.setup(Clock3, GPIO.OUT)
 GPIO.setup(Clock4, GPIO.OUT)
-GPIO.setup(DisPower, GPIO.OUT)
-GPIO.output(DisPower, GPIO.LOW)
+GPIO.setup(LED, GPIO.OUT)
+#GPIO.setup(DisPower, GPIO.OUT)
+#GPIO.output(DisPower, GPIO.LOW)
 
 #Wire labels
 # A - 2
@@ -153,6 +155,8 @@ try:
                 GPIO.output(Clock4, GPIO.LOW)
                 last4 = key
                 dispCount = 0 
+            else:
+
 
         if key == "#":
             on = not on
