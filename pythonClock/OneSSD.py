@@ -40,7 +40,7 @@ Q6 = 23
 Q7 = 18
 Q8 = 14
 Clock = 21
-DisPower = 15
+#DisPower = 15
 
 GPIO.setup(Q1, GPIO.OUT)
 GPIO.setup(Q2, GPIO.OUT)
@@ -51,8 +51,8 @@ GPIO.setup(Q6, GPIO.OUT)
 GPIO.setup(Q7, GPIO.OUT)
 GPIO.setup(Q8, GPIO.OUT)
 GPIO.setup(Clock, GPIO.OUT)
-GPIO.setup(DisPower, GPIO.OUT)
-GPIO.output(DisPower, GPIO.LOW)
+#GPIO.setup(DisPower, GPIO.OUT)
+#GPIO.output(DisPower, GPIO.LOW)
 
 #Wire labels
 #A - 2
@@ -123,13 +123,15 @@ try:
         if key == "#":
             on = not on
             if on == True:
-                GPIO.output(DisPower, GPIO.HIGH)
+                print("on true")
+                #GPIO.output(DisPower, GPIO.HIGH)
                 if last != None:
                     display_SSD(last)
                     GPIO.output(Clock, GPIO.HIGH)
                     GPIO.output(Clock, GPIO.LOW)
             else:
-                GPIO.output(DisPower, GPIO.LOW)
+                print("on false")
+                #GPIO.output(DisPower, GPIO.LOW)
                 GPIO.output(Q1, GPIO.LOW)
                 GPIO.output(Q2, GPIO.LOW)
                 GPIO.output(Q3, GPIO.LOW)
@@ -138,6 +140,8 @@ try:
                 GPIO.output(Q6, GPIO.LOW)
                 GPIO.output(Q7, GPIO.LOW)
                 GPIO.output(Q8, GPIO.LOW)
+                GPIO.output(Clock, GPIO.HIGH)
+                GPIO.output(Clock, GPIO.LOW)
 
         time.sleep(0.15)
 
