@@ -39,12 +39,14 @@ Q5 = 24
 Q6 = 23
 Q7 = 18
 Q8 = 14
+
+# global Clock1, Clock2, Clock3, Clock4
 Clock1 = 21
-Clock2 = #
-Clock3 = #
-Clock4 = #
+Clock2 = 10
+Clock3 = 9
+Clock4 = 11
 #DisPower = 15
-LED = # Invalid Entry LED GPIO
+LED = 4 # Invalid Entry LED GPIO
 
 GPIO.setup(Q1, GPIO.OUT)
 GPIO.setup(Q2, GPIO.OUT)
@@ -59,6 +61,7 @@ GPIO.setup(Clock2, GPIO.OUT)
 GPIO.setup(Clock3, GPIO.OUT)
 GPIO.setup(Clock4, GPIO.OUT)
 GPIO.setup(LED, GPIO.OUT)
+GPIO.output(LED, GPIO.LOW)
 #GPIO.setup(DisPower, GPIO.OUT)
 #GPIO.output(DisPower, GPIO.LOW)
 
@@ -82,6 +85,7 @@ last4 = None
 
 # Keep track of display
 dispCount = 0
+input = False # Detect if input is found
 
 display_dict = {"0": ["A", "B", "C", "D", "E", "F"], # To display each number
                 "1": ["B", "C"], 
@@ -121,62 +125,148 @@ def display_SSD(char):
         else:
             GPIO.output(letters_dict[l], GPIO.LOW)
 
-# Function for minute sleep
-try:
-    while True:
-        for x, row in [(X1, ["1","2","3","A"]), (X2, ["4","5","6","B"]), (X3, ["7","8","9","C"]), (X4, ["*","0","#","D"])]:
-            key = readKeypad(x, row)
-            if key != None:
-                print(key)
-                break
-        # First Input
-        if on == True: 
-            if dispCount == 0 and key in ["0", "1", "2"]:
-                display_SSD(key)
+def display_PM(char):
+    letters = display_dict[char]
+    letters.append("*")
+    for l in letters_dict:
+        if l in letters:
+            GPIO.output(letters_dict[l], GPIO.HIGH)
+        else:
+            GPIO.output(letters_dict[l], GPIO.LOW)
+
+# Function for blink numbers
+def blinkDisp():
+    global last4, last3, last2, last1
+    key = None
+    clock = Clock1
+    while(dispCount < 4):
+        while(key == None):
+            display_SSD("8")
+            time.sleep(0.5)
+            offDisp(clock)
+            time.sleep(0.5)
+            key = readKey()
+        if key in ["0", "1", "2"]:
+            GPIO.output(LED, GPIO.LOW)
+            display_SSD(key)
+            GPIO.output(Clock1, GPIO.HIGH)
+            GPIO.output(Clock1, GPIO.LOW)
+            last1 = key
+            dispCount += 1
+            clock = Clock2
+            key = None
+        elif dispCount == 1 and key in ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]:
+            GPIO.output(LED, GPIO.LOW)
+            temp = int (last1 + key)
+            '''if temp > 12:
+                temp -= 12
+                H1 = str(temp[0])
+                H2 = str(temp[1])
+                display_SSD(H1) # Update the 24 hour clock to display pm times
                 GPIO.output(Clock1, GPIO.HIGH)
                 GPIO.output(Clock1, GPIO.LOW)
-                last1 = key
-                dispCount += 1
-            elif dispCount == 1 and key in ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]:
-                display_SSD(key)
+                display_PM(H2)
                 GPIO.output(Clock2, GPIO.HIGH)
-                GPIO.output(Clock2, GPIO.LOW)
-                last2 = key
-                dispCount += 1
-            elif dispCount == 2 and key in ["0", "1", "2", "3", "4", "5"]:
-                display_SSD(key)
-                GPIO.output(Clock3, GPIO.HIGH)
-                GPIO.output(Clock3, GPIO.LOW)
-                last3 = key
-                dispCount += 1
-            elif dispCount == 3 and key in ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]:
-                display_SSD(key)
-                GPIO.output(Clock4, GPIO.HIGH)
-                GPIO.output(Clock4, GPIO.LOW)
-                last4 = key
-                dispCount = 0 
-            else:
+                GPIO.output(Clock1, GPIO.LOW)
+                last1 = H1
+                last2 = H2
+            else:'''
+            display_SSD(key)
+            GPIO.output(Clock2, GPIO.HIGH)
+            GPIO.output(Clock2, GPIO.LOW)
+            last2 = key
+            dispCount += 1
+            clock = Clock3
+            key = None
+        elif dispCount == 2 and key in ["0", "1", "2", "3", "4", "5", "9"]:
+            GPIO.output(LED, GPIO.LOW)
+            display_SSD(key)
+            GPIO.output(Clock3, GPIO.HIGH)
+            GPIO.output(Clock3, GPIO.LOW)
+            last3 = key
+            dispCount += 1
+            clock = Clock4
+            key = None
+        elif dispCount == 3 and key in ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]:
+            GPIO.output(LED, GPIO.LOW)
+            display_SSD(key)
+            GPIO.output(Clock4, GPIO.HIGH)
+            GPIO.output(Clock4, GPIO.LOW)
+            last4 = key
+            dispCount += 1
+        else:
+            GPIO.output(LED, GPIO.HIGH)
 
+# Turn off Displays
+def offDisp(clock):
+    GPIO.output(Q1, GPIO.LOW)
+    GPIO.output(Q2, GPIO.LOW)
+    GPIO.output(Q3, GPIO.LOW)
+    GPIO.output(Q4, GPIO.LOW)
+    GPIO.output(Q5, GPIO.LOW)
+    GPIO.output(Q6, GPIO.LOW)
+    GPIO.output(Q7, GPIO.LOW)
+    GPIO.output(Q8, GPIO.LOW)
+    GPIO.output(clock, GPIO.HIGH)
+    GPIO.output(clock, GPIO.LOW)
+
+def allOffDisp():
+    GPIO.output(Q1, GPIO.LOW)
+    GPIO.output(Q2, GPIO.LOW)
+    GPIO.output(Q3, GPIO.LOW)
+    GPIO.output(Q4, GPIO.LOW)
+    GPIO.output(Q5, GPIO.LOW)
+    GPIO.output(Q6, GPIO.LOW)
+    GPIO.output(Q7, GPIO.LOW)
+    GPIO.output(Q8, GPIO.LOW)
+    GPIO.output(Clock1, GPIO.HIGH)
+    GPIO.output(Clock1, GPIO.LOW)
+    GPIO.output(Clock2, GPIO.HIGH)
+    GPIO.output(Clock2, GPIO.LOW)
+    GPIO.output(Clock3, GPIO.HIGH)
+    GPIO.output(Clock3, GPIO.LOW)
+    GPIO.output(Clock4, GPIO.HIGH)
+    GPIO.output(Clock4, GPIO.LOW)
+
+# Detect reading from keypad
+def readKey():
+    for x, row in [(X1, ["1","2","3","A"]), (X2, ["4","5","6","B"]), (X3, ["7","8","9","C"]), (X4, ["*","0","#","D"])]:
+        key = readKeypad(x, row)
+        if key != None:
+            return key
+    return None
+    
+try:
+    while True:
+        key = readKey()
+        print(key)
+        # First Input
+        if on == True: 
+            if dispCount == 0:
+                blinkDisp()
 
         if key == "#":
             on = not on
             if on == True:
-                GPIO.output(DisPower, GPIO.HIGH)
                 if last1 != None:
                     display_SSD(last1)
                     GPIO.output(Clock1, GPIO.HIGH)
                     GPIO.output(Clock1, GPIO.LOW)
+                if last2 != None:
+                    display_SSD(last2)
+                    GPIO.output(Clock2, GPIO.HIGH)
+                    GPIO.output(Clock2, GPIO.LOW)
+                if last3 != None:
+                    display_SSD(last3)
+                    GPIO.output(Clock3, GPIO.HIGH)
+                    GPIO.output(Clock3, GPIO.LOW)
+                if last4 != None:
+                    display_SSD(last4)
+                    GPIO.output(Clock4, GPIO.HIGH)
+                    GPIO.output(Clock4, GPIO.LOW)
             else:
-                GPIO.output(DisPower, GPIO.LOW)
-                GPIO.output(Q1, GPIO.LOW)
-                GPIO.output(Q2, GPIO.LOW)
-                GPIO.output(Q3, GPIO.LOW)
-                GPIO.output(Q4, GPIO.LOW)
-                GPIO.output(Q5, GPIO.LOW)
-                GPIO.output(Q6, GPIO.LOW)
-                GPIO.output(Q7, GPIO.LOW)
-                GPIO.output(Q8, GPIO.LOW)
-
+                allOffDisp()
+                
         time.sleep(0.15)
 
 except KeyboardInterrupt:
