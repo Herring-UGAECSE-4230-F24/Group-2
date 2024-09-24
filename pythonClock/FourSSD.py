@@ -41,10 +41,10 @@ Q7 = 18
 Q8 = 14
 
 # global Clock1, Clock2, Clock3, Clock4
-Clock1 = 21
-Clock2 = 10
-Clock3 = 9
-Clock4 = 11
+Clock1 = 11
+Clock2 = 9
+Clock3 = 10
+Clock4 = 21
 #DisPower = 15
 LED = 4 # Invalid Entry LED GPIO
 
@@ -75,7 +75,7 @@ GPIO.output(LED, GPIO.LOW)
 # G - 4 
 
 # Variable for on/off function
-on = False
+on = True
 
 # Remember last1 variable
 last1 = None
@@ -85,7 +85,6 @@ last4 = None
 
 # Keep track of display
 dispCount = 0
-input = False # Detect if input is found
 
 display_dict = {"0": ["A", "B", "C", "D", "E", "F"], # To display each number
                 "1": ["B", "C"], 
@@ -136,17 +135,20 @@ def display_PM(char):
 
 # Function for blink numbers
 def blinkDisp():
-    global last4, last3, last2, last1
+    global last4, last3, last2, last1, dispCount, Clock1, Clock2, Clock3, Clock4
     key = None
     clock = Clock1
     while(dispCount < 4):
+        print(key)
         while(key == None):
             display_SSD("8")
-            time.sleep(0.5)
+            onDisp(clock)
+            time.sleep(0.2)
             offDisp(clock)
-            time.sleep(0.5)
+            time.sleep(0.2)
             key = readKey()
-        if key in ["0", "1", "2"]:
+        print(key)   
+        if dispCount == 0 and key in ["0", "1", "2"]:
             GPIO.output(LED, GPIO.LOW)
             display_SSD(key)
             GPIO.output(Clock1, GPIO.HIGH)
@@ -196,9 +198,11 @@ def blinkDisp():
             dispCount += 1
         else:
             GPIO.output(LED, GPIO.HIGH)
+            key = None
 
 # Turn off Displays
-def offDisp(clock):
+def offDisp(clk):
+    print("in offdisp")
     GPIO.output(Q1, GPIO.LOW)
     GPIO.output(Q2, GPIO.LOW)
     GPIO.output(Q3, GPIO.LOW)
@@ -207,8 +211,13 @@ def offDisp(clock):
     GPIO.output(Q6, GPIO.LOW)
     GPIO.output(Q7, GPIO.LOW)
     GPIO.output(Q8, GPIO.LOW)
-    GPIO.output(clock, GPIO.HIGH)
-    GPIO.output(clock, GPIO.LOW)
+    GPIO.output(clk, GPIO.HIGH)
+    GPIO.output(clk, GPIO.LOW)
+
+# Function for turning on displays
+def onDisp(clk):
+    GPIO.output(clk, GPIO.HIGH)
+    GPIO.output(clk, GPIO.HIGH)
 
 def allOffDisp():
     GPIO.output(Q1, GPIO.LOW)
@@ -270,4 +279,6 @@ try:
         time.sleep(0.15)
 
 except KeyboardInterrupt:
+    allOffDisp()
     GPIO.cleanup()
+
