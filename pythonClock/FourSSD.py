@@ -217,7 +217,7 @@ def offDisp(clk):
 # Function for turning on displays
 def onDisp(clk):
     GPIO.output(clk, GPIO.HIGH)
-    GPIO.output(clk, GPIO.HIGH)
+    GPIO.output(clk, GPIO.LOW)
 
 def allOffDisp():
     GPIO.output(Q1, GPIO.LOW)
