@@ -148,15 +148,25 @@ def blinkDisp():
             time.sleep(0.2)
             key = readKey()
         print(key)   
-        if dispCount == 0 and key in ["0", "1", "2"]:
-            GPIO.output(LED, GPIO.LOW)
-            display_SSD(key)
-            GPIO.output(Clock1, GPIO.HIGH)
-            GPIO.output(Clock1, GPIO.LOW)
-            last1 = key
-            dispCount += 1
-            clock = Clock2
-            key = None
+        if dispCount == 0:
+            if key in ["0", "1", "2"]:
+                GPIO.output(LED, GPIO.LOW)
+                display_SSD(key)
+                GPIO.output(Clock1, GPIO.HIGH)
+                GPIO.output(Clock1, GPIO.LOW)
+                last1 = key
+                dispCount += 1
+                clock = Clock2
+                key = None
+            if key in ["*"]:
+                GPIO.output(LED, GPIO.LOW)
+                display_SSD(key)
+                GPIO.output(Clock1, GPIO.HIGH)
+                GPIO.output(Clock1, GPIO.LOW)
+                last1 = key
+                time.sleep(2)
+                key = readKey()
+
         elif dispCount == 1 and key in ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]:
             GPIO.output(LED, GPIO.LOW)
             temp = int (last1 + key)
