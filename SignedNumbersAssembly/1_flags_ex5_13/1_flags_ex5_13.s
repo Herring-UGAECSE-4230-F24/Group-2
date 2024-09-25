@@ -18,7 +18,7 @@ data5:  .word 0x80000000
 data6:  .word 0xFFFFFFFF
 data7:  .word 0xFFFFFFFE
 data8:  .word 0xFFFFFFFB
-result:	.word 0n
+result:	.word 0
 result2: .word 0
 result3: .word 0
 result4: .word 0

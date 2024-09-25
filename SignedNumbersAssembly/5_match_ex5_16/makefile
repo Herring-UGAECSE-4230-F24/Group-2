@@ -1,5 +1,5 @@
 #Program name
-PROG = 5_match_ex_16
+PROG = 5_match_ex5_16
 OBJS = ${PROG}.o
 
 DEBUG = 1

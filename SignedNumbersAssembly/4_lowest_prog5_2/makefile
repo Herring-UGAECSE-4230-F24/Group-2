@@ -1,5 +1,5 @@
 #Program name
-PROG = 4_lower_prog5_2
+PROG = 4_lowest_prog5_2
 OBJS = ${PROG}.o
 
 DEBUG = 1
