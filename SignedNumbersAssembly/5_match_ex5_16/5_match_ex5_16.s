@@ -16,7 +16,7 @@ _start:
 		mov	r3, #9	
 begin:
 		ldrsb r1, [r0]   @ r1 = contents of loc. pointed to by r0 (sign extended)
-		cmn	r1, r5		@ compare r1 and negative of r5
+		cmp	r1, r5		@ compare r1 and r5
 		beq 	found		@ branch if r1 is equal to negative of r5
 
 		adds	r0, r0, #1	@ increment pointer
