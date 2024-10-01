@@ -63,8 +63,6 @@ GPIO.setup(Clock3, GPIO.OUT)
 GPIO.setup(Clock4, GPIO.OUT)
 GPIO.setup(LED, GPIO.OUT)
 GPIO.output(LED, GPIO.LOW)
-#GPIO.setup(DisPower, GPIO.OUT)
-#GPIO.output(DisPower, GPIO.LOW)
 
 #Wire labels
 # A - 2
@@ -346,7 +344,7 @@ def min(): # Delay program without sleep
     for s in range(60): #change this to make 60s
         pass
 
-def restart():
+def restart(): # Set display to 00:00
     display_SSD("0")
     allOnDisp()
 
@@ -379,10 +377,10 @@ def autoClock(): # Go into automatic time mode
     GPIO.output(Clock4, GPIO.LOW)
     key = readKey
 
-def hashtag():
-    on = not on
+def hashtag(): # Toggle on and off display with #
+    on = not on # set the opposited of current LED state
     if on == True:
-        if last1 != None:
+        if last1 != None: # Display last saved value
             display_SSD(last1)
             GPIO.output(Clock1, GPIO.HIGH)
             GPIO.output(Clock1, GPIO.LOW)
@@ -399,7 +397,8 @@ def hashtag():
             GPIO.output(Clock4, GPIO.HIGH)
             GPIO.output(Clock4, GPIO.LOW)
     else:
-        allOffDisp()
+        allOffDisp() # Turn off display
+
 try:
     while True:
         restart() # Show 00:00 on power up
