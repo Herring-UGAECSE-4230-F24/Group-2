@@ -143,9 +143,10 @@ def blinkDisp():
     key = None
     clock = Clock1
     while(dispCount < 4):
-        print(key)
+        if key !=  None:
+            print(key)
         while(key == None): # Make the display flash when waiting for input
-            display_SSD("8")
+            display_SSD("0")
             onDisp(clock)
             time.sleep(0.2)
             offDisp(clock)
@@ -175,11 +176,13 @@ def blinkDisp():
         elif dispCount == 1 and key in ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]:
             GPIO.output(LED, GPIO.LOW)
             temp = int (last1 + key) # Put the value of HH together in variable temp
+            print(temp)
             mlast2 = key # Value for Military time
             if temp > 12: # Check if hours is in PM or past 12 pm (All for displaying)
                 temp -= 12
-                H1 = str(temp[0])
-                H2 = str(temp[1])
+                temp = str(temp)
+                H1 = temp[0]
+                H2 = temp[1]
                 display_SSD(H1) # Update the 24 hour clock to display pm times
                 GPIO.output(Clock1, GPIO.HIGH)
                 GPIO.output(Clock1, GPIO.LOW)
@@ -190,8 +193,8 @@ def blinkDisp():
                 last2 = H2
             elif temp == 00 or temp == 24: # For 12 am times
                 temp = 12
-                H1 = str(temp[0])
-                H2 = str(temp[1])
+                H1 = '1'
+                H2 = '2'
                 display_SSD(H1) # Update the 24 hour clock to display pm times
                 GPIO.output(Clock1, GPIO.HIGH)
                 GPIO.output(Clock1, GPIO.LOW)
@@ -345,27 +348,51 @@ def min(): # Delay program without sleep
         pass
 
 def restart(): # Set display to 00:00
+    global Clock1, Clock2, Clock3, Clock4
+    clock = Clock1
     display_SSD("0")
-    allOnDisp()
+    onDisp(Clock1)
+
+    time.sleep(0.2)
+    clock = Clock2
+    display_SSD("0")
+    onDisp(Clock2)
+
+    time.sleep(0.2)
+    clock = Clock3
+    display_SSD("0")
+    onDisp(Clock3)
+
+    time.sleep(0.2)
+    clock = Clock4
+    display_SSD("0")
+    onDisp(Clock4)
 
 def autoClock(): # Go into automatic time mode
     now = datetime.now()
     hour = '{0:02d}'.format(now.hour)
     minute = '{0:02d}'.format(now.minute)
+    hour = int(hour)
 
     if hour > 12:
         hour -= 12
-        display_SSD(hour[0])
+        hour = str(hour)
+        H1 = hour[0]
+        H2 = hour[1]
+        display_SSD(H1)
         GPIO.output(Clock1, GPIO.HIGH)
         GPIO.output(Clock1, GPIO.LOW)
-        display_PM(hour[1])
+        display_PM(H1)
         GPIO.output(Clock2, GPIO.HIGH)
         GPIO.output(Clock2, GPIO.LOW)
     else:
-        display_SSD(hour[0])
+        hour = str(hour)
+        H1 = hour[0]
+        H2 = hour[1]
+        display_SSD(H1)
         GPIO.output(Clock1, GPIO.HIGH)
         GPIO.output(Clock1, GPIO.LOW)
-        display_PM(hour[1])
+        display_SSD(H2)
         GPIO.output(Clock2, GPIO.HIGH)
         GPIO.output(Clock2, GPIO.LOW)
 
@@ -415,9 +442,9 @@ try:
                 break
 
         elif key == "B": # Go into manually setting time
-            time.sleep(0.03)
-            if key == "B": # If another B is pressed
-                break
+            #time.sleep(0.03)
+            #if key == "B": # If another B is pressed
+            #    break
 
             # First Input
             if dispCount == 0: # Go into setting time
