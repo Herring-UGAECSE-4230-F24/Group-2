@@ -131,6 +131,7 @@ def display_SSD(char):
 def display_PM(char):
     letters = display_dict[char]
     letters.append("*")
+    print(letters)
     for l in letters_dict:
         if l in letters:
             GPIO.output(letters_dict[l], GPIO.HIGH)
@@ -143,8 +144,7 @@ def blinkDisp():
     key = None
     clock = Clock1
     while(dispCount < 4):
-        if key !=  None:
-            print(key)
+        print(key)
         while(key == None): # Make the display flash when waiting for input
             display_SSD("0")
             onDisp(clock)
@@ -172,7 +172,6 @@ def blinkDisp():
                 mlast1 = key # Value for Military Time (time used in code for changing time)
                 time.sleep(2)
                 key = readKey()
-
         elif dispCount == 1 and key in ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]:
             GPIO.output(LED, GPIO.LOW)
             temp = int (last1 + key) # Put the value of HH together in variable temp
@@ -180,15 +179,15 @@ def blinkDisp():
             mlast2 = key # Value for Military time
             if temp > 12: # Check if hours is in PM or past 12 pm (All for displaying)
                 temp -= 12
-                temp = str(temp)
+                temp = str(temp).zfill(2)
                 H1 = temp[0]
                 H2 = temp[1]
                 display_SSD(H1) # Update the 24 hour clock to display pm times
-                GPIO.output(Clock1, GPIO.HIGH)
-                GPIO.output(Clock1, GPIO.LOW)
-                display_PM(H2)
                 GPIO.output(Clock2, GPIO.HIGH)
                 GPIO.output(Clock2, GPIO.LOW)
+                display_PM(H2)
+                GPIO.output(Clock1, GPIO.HIGH)
+                GPIO.output(Clock1, GPIO.LOW)
                 last1 = H1
                 last2 = H2
             elif temp == 00 or temp == 24: # For 12 am times
@@ -235,52 +234,51 @@ def blinkDisp():
 
 def manCount(): # Change time for manual setting
     global last4, last3, last2, last1, dispCount, Clock1, Clock2, Clock3, Clock4, mlast1, mlast2, mlast3, mlast4
-    while(key != "B"):
-        sleepMin()
-        tempMM = int (mlast3 + mlast4) # Put MM time together
-        tempMM += 1 # add 1 to value after one minute
-        tempHH = int (mlast1 + mlast2) # Put HH time together
-        key = readKey()
-        if tempMM[0] == 6:
-            tempHH += 1
-            tempMM[0] = 0
-        if tempHH == 25:
-            tempHH[0] = 0
-            tempHH[1] = 1
+    print("In MAN")
+    sleepMin()
+    tempMM = int (mlast3 + mlast4) # Put MM time together
+    tempMM += 1 # add 1 to value after one minute
+    tempHH = int (mlast1 + mlast2) # Put HH time together
+    key = readKey()
+    if tempMM[0] == 6:
+        tempHH += 1
+        tempMM[0] = 0
+    if tempHH == 25:
+        tempHH[0] = 0
+        tempHH[1] = 1
 
-        if tempHH > 12:
-            temp -= 12
-            H1 = str(temp[0])
-            H2 = str(temp[1])
-            display_SSD(H1) # Update the 24 hour clock to display pm times
-            GPIO.output(Clock1, GPIO.HIGH)
-            GPIO.output(Clock1, GPIO.LOW)
-            display_PM(H2)
-            GPIO.output(Clock2, GPIO.HIGH)
-            GPIO.output(Clock2, GPIO.LOW)
-            last1 = H1
-            last2 = H2
-        elif temp == 24: # For 12 am times
-            temp = 12
-            H1 = str(temp[0])
-            H2 = str(temp[1])
-            display_SSD(H1) # Update the 24 hour clock to display pm times
-            GPIO.output(Clock1, GPIO.HIGH)
-            GPIO.output(Clock1, GPIO.LOW)
-            display_SSD(H2)
-            GPIO.output(Clock2, GPIO.HIGH)
-            GPIO.output(Clock2, GPIO.LOW)
-            last1 = H1
-            last2 = H2
-        else: # Display the AM time
-            display_SSD(key)
-            GPIO.output(Clock2, GPIO.HIGH)
-            GPIO.output(Clock2, GPIO.LOW)
-            last2 = key
+    if tempHH > 12:
+        temp -= 12
+        H1 = str(temp[0])
+        H2 = str(temp[1])
+        display_SSD(H1) # Update the 24 hour clock to display pm times
+        GPIO.output(Clock1, GPIO.HIGH)
+        GPIO.output(Clock1, GPIO.LOW)
+        display_PM(H2)
+        GPIO.output(Clock2, GPIO.HIGH)
+        GPIO.output(Clock2, GPIO.LOW)
+        last1 = H1
+        last2 = H2
+    elif temp == 24: # For 12 am times
+        temp = 12
+        H1 = str(temp[0])
+        H2 = str(temp[1])
+        display_SSD(H1) # Update the 24 hour clock to display pm times
+        GPIO.output(Clock1, GPIO.HIGH)
+        GPIO.output(Clock1, GPIO.LOW)
+        display_SSD(H2)
+        GPIO.output(Clock2, GPIO.HIGH)
+        GPIO.output(Clock2, GPIO.LOW)
+        last1 = H1
+        last2 = H2
+    else: # Display the AM time
+        display_SSD(key)
+        GPIO.output(Clock2, GPIO.HIGH)
+        GPIO.output(Clock2, GPIO.LOW)
+        last2 = key
         
 # Turn off Displays
 def offDisp(clk):
-    print("in offdisp")
     GPIO.output(Q1, GPIO.LOW)
     GPIO.output(Q2, GPIO.LOW)
     GPIO.output(Q3, GPIO.LOW)
@@ -425,11 +423,11 @@ def hashtag(): # Toggle on and off display with #
             GPIO.output(Clock4, GPIO.LOW)
     else:
         allOffDisp() # Turn off display
+restart()# Show 00:00 on power up
+
 
 try:
     while True:
-        restart() # Show 00:00 on power up
-
         key = readKey()
         if key != None:
             print(key)
@@ -449,7 +447,9 @@ try:
             # First Input
             if dispCount == 0: # Go into setting time
                 blinkDisp()
-            elif dispCount == 4: # Start counting time
+                print("Display count")
+                print(dispCount)
+            if dispCount == 4: # Start counting time
                 manCount()
             
         time.sleep(0.15)
