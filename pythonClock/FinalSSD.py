@@ -371,6 +371,8 @@ def sleepMin():
     global bCount
     for i in range(120): # We still need to be able to read from the keypad while waiting to update the time, so loop 120 times with 0.5 second wait each loop
         key = readKey()
+        if key != None:
+            print(key)
         if key == "B":
             bCount += 1
         elif key != None:
@@ -457,7 +459,7 @@ def autoClock():
 
 # This function is used to toggle on and off display with #
 def hashtag(): 
-    global on
+    global on, key
     on = not on # set the opposited of current LED state
     print("On:     " + str(on))
     if on == True:
@@ -483,7 +485,7 @@ def hashtag():
             GPIO.output(Clock4, GPIO.LOW)
     else:
         allOffDisp() # Turn off display
-
+        key = None
 
 restart() # Show 00:00 on power up
 
@@ -499,6 +501,7 @@ try:
             print(key)
         
         if key == "A": # Sets time automatically
+            GPIO.output(LED, GPIO.LOW)
             bCount = 0 # Counter for how many times user has pressed "B"
             while(bCount != 3): # While bCount hasn't been pressed 3 times just continuously run through autoClock() to update the time
                 if on == True: # If hashtag() is hit, the on variable is toggled. If it is on, then we run autoClock() to change the display
@@ -513,6 +516,7 @@ try:
                     elif key != None:
                         bCount = 0
                 else: # If on is off, then we don't want to display the time, so we do not call autoClock()
+                    key = readKey()
                     if key == "#":
                         hashtag()
                     if key == "B":
@@ -524,6 +528,7 @@ try:
             
 
         elif key == "B": # Go into manually setting time
+            GPIO.output(LED, GPIO.LOW)
             # First Input
             if dispCount == 0: # Go into setting time
                 blinkDisp()
@@ -537,6 +542,9 @@ try:
                         manCount()
                 restart() # Once bCount is pressed three times, reset the clock
                 dispCount = 0 # Reset back to the first display
+        elif key != None: # Flash LED if any other input is pressed
+            GPIO.output(LED, GPIO.HIGH)
+            key = None
         time.sleep(0.15) 
 
 except KeyboardInterrupt:
