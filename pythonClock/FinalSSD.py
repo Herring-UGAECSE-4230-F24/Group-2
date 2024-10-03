@@ -264,49 +264,49 @@ def blinkDisp():
 This function is to update the time after manually setting the time.
 """
 def manCount(): # Change time for manual setting
-    global last4, last3, last2, last1, dispCount, Clock1, Clock2, Clock3, Clock4, mlast1, mlast2, mlast3, mlast4
-    tempMM = int (mlast3 + mlast4) # Put MM time together (minutes)
+    global last4, last3, last2, last1, dispCount, Clock1, Clock2, Clock3, Clock4, mlast1, mlast2, mlast3, mlast4 # ensure we can use these global variables
+    tempMM = int (mlast3 + mlast4) # Concatenate MM time together (minutes) because mlast3 and mlast4 are stored as strings
     tempMM += 1 # add 1 to value after one minute
-    tempHH = int (mlast1 + mlast2) # Put HH time together (hours in military time)
+    tempHH = int (mlast1 + mlast2) # Concatenate HH time together (hours in military time) becuase mlast1 and mlast2 are stored as strings
     print(tempHH)
     if tempMM == 60: # If the minutes switch over to the next hour, set minutes back to 0 and increase the hour by one
-        tempHH += 1
-        tempMM = 0
+        tempHH += 1 # Increase the hour by one
+        tempMM = 0 # Reset minutes back to 0
 
     tempHH2 = str(tempHH).zfill(2) # Since tempHH is sometimes only one digit, we need to use zfill to add back the 0 in front
-    mlast1 = tempHH2[0]
-    mlast2 = tempHH2[1]
-    if tempHH == 24: # For 12 am times
-        tempHH = 12
-        H1 = '1'
-        H2 = '2'
-        display_SSD(H1) # Update the 24 hour clock to display pm times
+    mlast1 = tempHH2[0] # Store the first digit of the hour in military time here
+    mlast2 = tempHH2[1] # Store the second digit of the hour in military time here
+    if tempHH == 24: # For 12 am time
+        tempHH = 12 # We would display 12 on the clock, so set this to 12
+        H1 = '1' # First digit
+        H2 = '2' # Second digit
+        display_SSD(H1) # Update the 1st SSD to show H1
         GPIO.output(Clock1, GPIO.HIGH)
         GPIO.output(Clock1, GPIO.LOW)
-        display_SSD(H2)
+        display_SSD(H2) # Update the 2nd SSD to show H2
         GPIO.output(Clock2, GPIO.HIGH)
         GPIO.output(Clock2, GPIO.LOW)
-        last1 = H1
+        last1 = H1 # Keep track of the last hour in case the hour needs to change
         last2 = H2
-        mlast1 = '0'
-        mlast2 = '0'
-    elif tempHH >= 12:
-        if tempHH != 12:
+        mlast1 = '0' # In military time, the hour would be 00, so we set mlast1 to 0
+        mlast2 = '0' # Same logic as above, mlast2 needs to be set to 0 as well
+    elif tempHH >= 12: # If the hour is in the afternoon and not midnight we need to display differently
+        if tempHH != 12: # If it is 1 pm or later, we need to change from military time (13-23) to the time that will be shown on the clock
             tempHH -= 12
-        tempHH = str(tempHH).zfill(2)
-        H1 = tempHH[0]
-        H2 = tempHH[1]
-        display_SSD(H1) # Update the 24 hour clock to display pm times
+        tempHH = str(tempHH).zfill(2) # Add back a 0 in front of the string in case tempHH is only 1 digit
+        H1 = tempHH[0] # Store first digit of the hour in military time here
+        H2 = tempHH[1] # Store the second digit of the hour in military time here
+        display_SSD(H1) # Update the 1st SSD to show H1
         GPIO.output(Clock1, GPIO.HIGH)
         GPIO.output(Clock1, GPIO.LOW)
-        display_PM(H2)
+        display_PM(H2) # Update the 2nd SSD to show H2 with the "." to indicate it is pm
         GPIO.output(Clock2, GPIO.HIGH)
         GPIO.output(Clock2, GPIO.LOW)
         last1 = H1
         last2 = H2
     
-    else: # Display the AM time
-        display_SSD(mlast1)
+    else: # If the time doesn't need any special changes (i.e. 12 am - 11 am), display the AM time
+        display_SSD(mlast1) 
         GPIO.output(Clock1, GPIO.HIGH)
         GPIO.output(Clock1, GPIO.LOW)
         last1 = mlast1
@@ -315,13 +315,13 @@ def manCount(): # Change time for manual setting
         GPIO.output(Clock2, GPIO.LOW)
         last1 = mlast2
 
-    tempMM = str(tempMM).zfill(2) # Display the minutes  
-    M1 = tempMM[0]
-    M2 = tempMM[1]
-    display_SSD(M1)
+    tempMM = str(tempMM).zfill(2) # Display the minutes, add 0 in case the minutes are from 0-9  
+    M1 = tempMM[0] # Store the first minute digit
+    M2 = tempMM[1] # Store the second minute digit
+    display_SSD(M1) # Display the first digit
     GPIO.output(Clock3, GPIO.HIGH)
     GPIO.output(Clock3, GPIO.LOW)
-    display_SSD(M2)
+    display_SSD(M2) # Display the second digit
     GPIO.output(Clock4, GPIO.HIGH)
     GPIO.output(Clock4, GPIO.LOW)
     last3 = M1
@@ -371,8 +371,6 @@ def sleepMin():
     global bCount
     for i in range(120): # We still need to be able to read from the keypad while waiting to update the time, so loop 120 times with 0.5 second wait each loop
         key = readKey()
-        if key != None:
-            print(key)
         if key == "B":
             bCount += 1
         elif key != None:
@@ -423,11 +421,11 @@ def restart():
 
 # Go into automatic time mode
 def autoClock(): 
-    now = datetime.now()
-    hour = '{0:02d}'.format(now.hour)
-    minute = '{0:02d}'.format(now.minute)
-    hour = int(hour)
-    # Check if AM / PM and display time
+    now = datetime.now() # Get the current time
+    hour = '{0:02d}'.format(now.hour) # Format the time get the hour
+    minute = '{0:02d}'.format(now.minute) # Format the time to get the minutes
+    hour = int(hour) # Convert the hour to integer so we can determine if am/pm
+    # Check if AM / PM and display time, logic is the same as in manCount()
     if hour >= 12:
         hour -= 12
         hour = str(hour).zfill(2)
@@ -500,10 +498,10 @@ try:
         if key != None:
             print(key)
         
-        if key == "A": # sets time automatically
-            bCount = 0 # counter for how many times user has pressed "B"
-            while(bCount != 3):
-                if on == True:
+        if key == "A": # Sets time automatically
+            bCount = 0 # Counter for how many times user has pressed "B"
+            while(bCount != 3): # While bCount hasn't been pressed 3 times just continuously run through autoClock() to update the time
+                if on == True: # If hashtag() is hit, the on variable is toggled. If it is on, then we run autoClock() to change the display
                     autoClock()
                     key = readKey()
                     if key != None:
@@ -514,7 +512,7 @@ try:
                         bCount += 1
                     elif key != None:
                         bCount = 0
-                else:
+                else: # If on is off, then we don't want to display the time, so we do not call autoClock()
                     if key == "#":
                         hashtag()
                     if key == "B":
@@ -522,7 +520,7 @@ try:
                     elif key != None:
                         bCount = 0
                 time.sleep(0.5)
-            restart()
+            restart() # Once bCount is pressed three times, reset the clock
             
 
         elif key == "B": # Go into manually setting time
@@ -537,9 +535,9 @@ try:
                     # print(time.time() - current_time) # For accuracy data
                     if bCount != 3:
                         manCount()
-                restart()
-                dispCount = 0
-        time.sleep(0.15)
+                restart() # Once bCount is pressed three times, reset the clock
+                dispCount = 0 # Reset back to the first display
+        time.sleep(0.15) 
 
 except KeyboardInterrupt:
     allOffDisp()
