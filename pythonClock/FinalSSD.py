@@ -371,6 +371,8 @@ def sleepMin():
     global bCount
     for i in range(120): # We still need to be able to read from the keypad while waiting to update the time, so loop 120 times with 0.5 second wait each loop
         key = readKey()
+        if key != None:
+            print(key)
         if key == "B":
             bCount += 1
         elif key != None:
@@ -504,7 +506,15 @@ try:
                 if on == True:
                     autoClock()
                     key = readKey()
-                    print(key)
+                    if key != None:
+                        print(key)
+                    if key == "#":
+                        hashtag()
+                    if key == "B":
+                        bCount += 1
+                    elif key != None:
+                        bCount = 0
+                else:
                     if key == "#":
                         hashtag()
                     if key == "B":
@@ -529,7 +539,6 @@ try:
                         manCount()
                 restart()
                 dispCount = 0
-        print('end while')
         time.sleep(0.15)
 
 except KeyboardInterrupt:
