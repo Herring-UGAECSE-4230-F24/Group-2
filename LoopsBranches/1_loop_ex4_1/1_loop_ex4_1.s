@@ -12,8 +12,9 @@ _start:	ldr 	r2, =1000	@ r2 = 1000 (decimal) for counter
 again: 	add 	r0, r0, #9	@ r0 = r0 + 9 (add 09 to r0, r0 = sum)
 		subs	r2, r2, #1	@ decrement counter and set the flags. 
 		bne 	again		@ repeat until count = 0
-		mov 	r4, r0		@ store the sum in r4
- 	
+
+end:	mov 	r4, r0		@ store the sum in r4
+
 		mov   	r7, #1
 		svc  	0
 

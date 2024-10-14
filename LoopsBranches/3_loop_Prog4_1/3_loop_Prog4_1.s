@@ -25,7 +25,7 @@ _start:
 again:
 	ldr	next, [pointer]		@ load contents of pointer location to next
 	cmp	max, next		@ compare max and next		
-	movlo	max, next		@ if max is lower than next then max=next
+	movgt	max, next		@ if max is lower than next then max=next
 	add	pointer, pointer, #4	@ pointer = pointer  +  4 to point to next 
 	subs	count, count, #1	@ decrement counter
 	bne	again			@ branch again if counter is not zero

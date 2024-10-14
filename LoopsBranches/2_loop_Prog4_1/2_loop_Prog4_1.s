@@ -23,7 +23,7 @@ again:
 	ldr	next,[pointer]	@ load next with contents at address
 					@ in pointer
 	cmp	max, next		@ compare max and next
-	bhs	ctnu			@ if max > next branch to ctnu
+	blo	ctnu			@ if max > next branch to ctnu
 	mov	max, next		@ max = next
 ctnu:	
 	add	pointer, pointer, #4	@ increment pointer for next word
