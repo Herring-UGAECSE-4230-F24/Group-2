@@ -2,9 +2,9 @@ import RPi.GPIO as GPIO
 import time
 
 # GPIO pin setup
-CLK = 17
-DT = 18
-SW = 27
+CLK = 18
+DT = 23
+SW = 24
 
 # Initialize variables
 counter = 0
@@ -14,10 +14,11 @@ last_rotation_time = 0
 speed = 0
 
 # Setup GPIO
+GPIO.setwarnings(False)
 GPIO.setmode(GPIO.BCM)
-GPIO.setup(CLK, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
-GPIO.setup(DT, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
-GPIO.setup(SW, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+GPIO.setup(CLK,GPIO.IN,pull_up_down=GPIO.PUD_UP)
+GPIO.setup(DT,GPIO.IN,pull_up_down=GPIO.PUD_UP)
+GPIO.setup(SW,GPIO.IN,pull_up_down=GPIO.PUD_UP)
 
 def calculate_speed():
     global rotation_start_time, last_rotation_time, speed
@@ -34,17 +35,22 @@ try:
     while True:
         clkState = GPIO.input(CLK)
         dtState = GPIO.input(DT)
-        
-        if clkState != clkLastState:
+        if GPIO.input(SW) == GPIO.LOW:
+            print("Press")
+            time.sleep(0.2)
+
+        elif (clkState == GPIO.LOW and clkLastState == GPIO.HIGH):
             calculate_speed()
-            if dtState != clkState:
+            if dtState == GPIO.HIGH:
+                print("CW")
                 counter += 1
             else:
+                print("CCW")
                 counter -= 1
-            print(f"Counter: {counter}, Speed: {speed:.2f} turns/second")
+            print(f"Speed: {speed:.2f} turns/second")
         
         clkLastState = clkState
-        time.sleep(0.01)  # Small delay to reduce CPU usage
+        time.sleep(0.01)  # Small delay for debouncing
 
-finally:
+except KeyboardInterrupts:
     GPIO.cleanup()
