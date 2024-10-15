@@ -30,7 +30,7 @@ def calculate_speed():
     else:
         time_diff = current_time - last_rotation_time
         if time_diff > 0:
-            speed = 1 / time_diff  # turns per second
+            speed = (1 / time_diff) / 140  # turns per second
     last_rotation_time = current_time
 
 def encoder_callback(channel):
@@ -44,14 +44,22 @@ def encoder_callback(channel):
     
     clkState = GPIO.input(CLK)
     dtState = GPIO.input(DT)
-    
-    if clkState != clkLastState:
+
+    if GPIO.input(SW) == GPIO.LOW:
+            print("Press")
+            
+            time.sleep(0.2)
+
+    elif(clkState == GPIO.LOW and clkLastState == GPIO.HIGH):
         calculate_speed()
         if dtState != clkState:
             counter += 1
+            print("CW")
         else:
             counter -= 1
-        print(f"Counter: {counter}, Speed: {speed:.2f} turns/second")
+            print("CCW")
+        print(counter)
+        print(f"Speed: {speed:.2f} turns/second")
     
     clkLastState = clkState
     dtLastState = dtState
