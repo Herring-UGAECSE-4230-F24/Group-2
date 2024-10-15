@@ -1,4 +1,4 @@
-import RPi.GPIO
+import RPi.GPIO as GPIO
 import time
 
 clk = 18
@@ -27,23 +27,23 @@ try:
                 startTurning = True
                 startTurningTime = time.time()
             if GPIO.input(dt) != currentClk:
-                counter -= 1
+                counter += 1
                 direction = "Counter Clockwise"
             else:
-                counter += 1
+                counter -= 1
                 direction = "Clockwise"
             print(counter)
             turns += 1
         lastClk = currentClk
 
         if GPIO.input(sw) == 1:
-            if time.time() - lastButtonPress > 50:
+            if ((time.time() - lastButtonPress) > 50):
                 print("Pressed!")
             lastButtonPress = time.time()
 
-        if (time.time() - startTurningTime > 2):
-            speed = turns / (time.time() - startTurningTime)
-            print("Speed: " + speed)
+        #if (time.time() - startTurningTime > 2):
+           # speed = turns / (time.time() - startTurningTime)
+            # print("Speed: " + str(speed))
 
         time.sleep(0.01)
 except KeyboardInterrupt:
