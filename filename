@@ -1,0 +1,50 @@
+import RPi.GPIO
+import time
+
+clk = 18
+sw = 24
+dt = 23
+
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(clk, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+GPIO.setup(dt, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+GPIO.setup(sw, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+
+counter = 0
+direction = ""
+speed = 0
+turns = 0
+lastButtonPress = time.time()
+lastClk = GPIO.input(clk)
+
+startTurning = False
+startTurningTime = 0
+try:
+    while True:
+        currentClk = GPIO.input(clk)
+        if currentClk != lastClk and currentClk == 1: 
+            if not startTurning:
+                startTurning = True
+                startTurningTime = time.time()
+            if GPIO.input(dt) != currentClk:
+                counter -= 1
+                direction = "Counter Clockwise"
+            else:
+                counter += 1
+                direction = "Clockwise"
+            print(counter)
+            turns += 1
+        lastClk = currentClk
+
+        if GPIO.input(sw) == 1:
+            if time.time() - lastButtonPress > 50:
+                print("Pressed!")
+            lastButtonPress = time.time()
+
+        if (time.time() - startTurningTime > 2):
+            speed = turns / (time.time() - startTurningTime)
+            print("Speed: " + speed)
+
+        time.sleep(0.01)
+except KeyboardInterrupt:
+    GPIO.cleanup()
