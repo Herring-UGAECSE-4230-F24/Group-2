@@ -2,19 +2,19 @@
 import RPi.GPIO as GPIO
 import time
 
-#setting the pins
+# Setting the pins
 clk = 18 
 dt = 23 
 sw = 24
 
-#Setting up the gpios as pull-up or high
+# Setting up the gpios as pull-up or high
 GPIO.setwarnings(False)
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(clk,GPIO.IN,pull_up_down=GPIO.PUD_UP)
 GPIO.setup(dt,GPIO.IN,pull_up_down=GPIO.PUD_UP)
 GPIO.setup(sw,GPIO.IN,pull_up_down=GPIO.PUD_UP)
 
-#counter and clk state
+# Counter and clk state
 counter=0
 lastClkState=GPIO.input(clk)
 speed=0
@@ -23,7 +23,7 @@ lastchange = False
 starttime = 0
 turns = 0
   
-#using the counter with the clk and dt
+# Using the counter with the clk and dt
 try:
     while True:
       
