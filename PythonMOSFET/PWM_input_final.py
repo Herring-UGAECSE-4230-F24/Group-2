@@ -23,6 +23,7 @@ last_time = 0
 starttime = 0
 debounce = 0.001
 rot_start_time = 0
+clkLastState = 0
   
 # Using the counter with the clk and dt
 try:
@@ -52,10 +53,20 @@ try:
           else:
             counter-=1 # Number counter for CCW
             print("Counter Clockwise")
-            lastClkState=clkState
+            rotation = True
+
+          if rotation_start_time == 0:
+              rotation_start_time = current_time
+          else:
+              time_diff = current_time - last_rotation_time
+              if time_diff > 0:
+                speed = (1 / time_diff) / 140  # turns per second
+          last_rotation_time = current_time
+
           print(counter)
-     
-        print(f"Speed: {speed}")
+          print(f"Speed: {speed}")
+        lastClkState=clkState
+
         time.sleep(0.04)
 
         
