@@ -18,12 +18,13 @@ GPIO.setup(sw,GPIO.IN,pull_up_down=GPIO.PUD_UP)
 counter = 0
 lastClkState=GPIO.input(clk)
 
+last_edge = 0
 speed = 0
 last_time = 0
 starttime = 0
 debounce = 0.001
 rot_start_time = 0
-clkLastState = 0
+lastclkState=GPIO.input(clk)
   
 # Using the counter with the clk and dt
 try:
@@ -33,12 +34,13 @@ try:
       clkState=GPIO.input(clk)
       dtState=GPIO.input(dt)
 
-      if (current_time - last_time) >= debounce:
+      if (current_time - last_edge) >= debounce:
+
         if GPIO.input(sw) == GPIO.LOW:
           print("Press")
           time.sleep(.2)
           
-        elif (clkState == GPIO.LOW and clkLastState == GPIO.HIGH):
+        if (clkState == GPIO.LOW and lastclkState == GPIO.HIGH):
           if rot_start_time == 0:
               rot_start_time = current_time
           else:
@@ -46,18 +48,21 @@ try:
               if time_diff > 0:
                 speed = (1 / time_diff) / 140  # turns per second
           last_time = current_time
+
           if dtState!=clkState:
             counter+=1 # Number counter for CW
             print("Clockwise")
           else:
             counter-=1 # Number counter for CCW
             print("Counter Clockwise")
-            rotation = True
-          print(counter)
+            
+
+          print(f"Counter: {counter}")
           print(f"Speed: {speed}")
 
 
-        lastClkState=clkState
+        lastClkState = clkState
+        last_edge = current_time
 
         time.sleep(0.04)
 
