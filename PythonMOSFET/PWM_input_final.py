@@ -15,47 +15,48 @@ GPIO.setup(dt,GPIO.IN,pull_up_down=GPIO.PUD_UP)
 GPIO.setup(sw,GPIO.IN,pull_up_down=GPIO.PUD_UP)
 
 # Counter and clk state
-counter=0
+counter = 0
 lastClkState=GPIO.input(clk)
-speed=0
-  
-lastchange = False
+
+speed = 0
+last_time = 0
 starttime = 0
-turns = 0
+debounce = 0.001
+rot_start_time = 0
   
 # Using the counter with the clk and dt
 try:
     while True:
-      
+      current_time = time.time()
+
       clkState=GPIO.input(clk)
       dtState=GPIO.input(dt)
 
-      if GPIO.input(sw) == GPIO.LOW:
-        print("Press")
-        time.sleep(.2)
-        
-      
-      if clkState!=lastClkState:
-        if not lastchange:
-          starttime = time.time()
-          lastchange = True
-        if dtState!=clkState:
-          counter+=1 # Number counter for CW
-          #print("Clockwise,      " + str(counter))
-        else:
-          counter-=1 # Number counter for CCW
-          #print("Counter Clockwise,      " + str(counter))
+      if (current_time - last_time) >= debounce:
+        if GPIO.input(sw) == GPIO.LOW:
+          print("Press")
+          time.sleep(.2)
+          
+        elif (clkState == GPIO.LOW and clkLastState == GPIO.HIGH):
+          if rotation_start_time == 0:
+              rotation_start_time = current_time
+          else:
+              time_diff = current_time - last_rotation_time
+            if time_diff > 0:
+                speed = (1 / time_diff) / 140  # turns per second
+          last_rotation_time = current_time
 
-          lastClkState=clkState
-        print(counter)
-        turns += 1
-      else:
-        speed = turns / (time.time() - starttime)
-        if speed != 0:
-          print("Speed: " + str(speed))
-        turns = 0
-        lastchange = False
-      time.sleep(0.04)
+          if dtState!=clkState:
+            counter+=1 # Number counter for CW
+            print("Clockwise")
+          else:
+            counter-=1 # Number counter for CCW
+            print("Counter Clockwise")
+            lastClkState=clkState
+          print(counter)
+     
+        print(f"Speed: {speed}")
+        time.sleep(0.04)
 
         
     
