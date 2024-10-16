@@ -16,8 +16,6 @@ GPIO.setup(sw,GPIO.IN,pull_up_down=GPIO.PUD_UP)
 
 # Counter and clk state
 counter = 0
-lastClkState=GPIO.input(clk)
-
 last_edge = 0
 speed = 0
 last_time = 0
@@ -40,7 +38,8 @@ try:
           print("Press")
           time.sleep(.2)
           
-        if (clkState == GPIO.LOW and lastclkState == GPIO.HIGH):
+        elif (clkState == GPIO.LOW and lastclkState == GPIO.HIGH):
+          current_time = time.time()
           if rot_start_time == 0:
               rot_start_time = current_time
           else:
@@ -49,24 +48,20 @@ try:
                 speed = (1 / time_diff) / 140  # turns per second
           last_time = current_time
 
-          if dtState!=clkState:
-            counter+=1 # Number counter for CW
-            print("Clockwise")
+          if dtState == GPIO.HIGH:
+              print("CW")
+              counter += 1
           else:
-            counter-=1 # Number counter for CCW
-            print("Counter Clockwise")
-            
+              print("CCW")
+              counter -= 1
+          print(counter)
+          print(f"Speed: {speed:.2f} turns/second")
+          
 
-          print(f"Counter: {counter}")
-          print(f"Speed: {speed}")
-
-
-        lastClkState = clkState
+        lastclkState = clkState
         last_edge = current_time
 
-        time.sleep(0.04)
-
-        
+        time.sleep(0.05)
     
 except KeyboardInterrupt:
   GPIO.cleanup()
