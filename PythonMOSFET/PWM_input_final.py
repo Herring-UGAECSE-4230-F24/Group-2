@@ -42,7 +42,7 @@ try:
               rotation_start_time = current_time
           else:
               time_diff = current_time - last_rotation_time
-            if time_diff > 0:
+              if time_diff > 0:
                 speed = (1 / time_diff) / 140  # turns per second
           last_rotation_time = current_time
 
