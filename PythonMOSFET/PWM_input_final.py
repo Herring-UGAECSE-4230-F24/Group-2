@@ -39,14 +39,13 @@ try:
           time.sleep(.2)
           
         elif (clkState == GPIO.LOW and clkLastState == GPIO.HIGH):
-          if rotation_start_time == 0:
-              rotation_start_time = current_time
+          if rot_start_time == 0:
+              rot_start_time = current_time
           else:
-              time_diff = current_time - last_rotation_time
+              time_diff = current_time - last_time
               if time_diff > 0:
                 speed = (1 / time_diff) / 140  # turns per second
-          last_rotation_time = current_time
-
+          last_time = current_time
           if dtState!=clkState:
             counter+=1 # Number counter for CW
             print("Clockwise")
@@ -54,17 +53,10 @@ try:
             counter-=1 # Number counter for CCW
             print("Counter Clockwise")
             rotation = True
-
-          if rotation_start_time == 0:
-              rotation_start_time = current_time
-          else:
-              time_diff = current_time - last_rotation_time
-              if time_diff > 0:
-                speed = (1 / time_diff) / 140  # turns per second
-          last_rotation_time = current_time
-
           print(counter)
           print(f"Speed: {speed}")
+
+
         lastClkState=clkState
 
         time.sleep(0.04)
