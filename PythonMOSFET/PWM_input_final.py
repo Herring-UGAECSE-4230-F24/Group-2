@@ -36,6 +36,7 @@ try:
             # Check if switch is pressed
             if GPIO.input(sw) == GPIO.LOW:
                 print("Press")
+                time.sleep(0.2)
             
             # Check for a falling edge on clock pin
             elif(clkState == GPIO.LOW and lastClkState == GPIO.HIGH):
