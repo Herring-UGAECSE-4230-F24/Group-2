@@ -48,7 +48,8 @@ try:
                 print("CCW")
                 counter -= 1
             print(f"Speed: {speed:.2f} turns/second")
-        
+            print(counter)
+            
         clkLastState = clkState
         time.sleep(0.01)  # Small delay for debouncing
 
