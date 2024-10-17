@@ -32,7 +32,7 @@ try:
       clkState=GPIO.input(clk)
       dtState=GPIO.input(dt)
 
-      if (current_time - last_edge) >= debounce:
+      #if (current_time - last_edge) >= debounce:
 
         if GPIO.input(sw) == GPIO.LOW:
           print("Press")

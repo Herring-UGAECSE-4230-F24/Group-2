@@ -22,7 +22,7 @@ lastClkState = GPIO.input(clk)  # Last state of the clock pin
 speed = 0            # Rotation speed
 rot_start_time = 0   # Start time for rotation measurement
 last_time = 0        # Last time a state change was detected
-debounce = 0.01     # Debounce time in seconds
+debounce = 0.002     # Debounce time in seconds
 last_edge = 0        # Time of the last edge detection
 
 try:

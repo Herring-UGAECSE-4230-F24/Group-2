@@ -38,7 +38,7 @@ def encoder_callback(channel):
     
     current_time = time.time()
     #if (current_time - last_edge_time) < debounce_time:
-        return
+        #return
     
     last_edge_time = current_time
     
