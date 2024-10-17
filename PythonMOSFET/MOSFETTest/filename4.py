@@ -30,7 +30,7 @@ def calculate_speed():
     else:
         time_diff = current_time - last_rotation_time
         if time_diff > 0:
-            speed = (1 / time_diff) / 140  # turns per second
+            speed = (1 / time_diff)   # turns per second
     last_rotation_time = current_time
 
 def encoder_callback(channel):
@@ -47,7 +47,6 @@ def encoder_callback(channel):
 
     if GPIO.input(SW) == GPIO.LOW:
             print("Press")
-            
             time.sleep(0.2)
 
     elif(clkState == GPIO.LOW and clkLastState == GPIO.HIGH):
@@ -67,6 +66,7 @@ def encoder_callback(channel):
 try:
     GPIO.add_event_detect(CLK, GPIO.BOTH, callback=encoder_callback)
     GPIO.add_event_detect(DT, GPIO.BOTH, callback=encoder_callback)
+    GPIO.add_event_detect(SW, GPIO.BOTH, callback=encoder_callback)
     
     while True:
         time.sleep(0.1)  # Main loop can sleep longer, as we're using interrupts

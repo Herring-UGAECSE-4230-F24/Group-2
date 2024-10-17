@@ -1,6 +1,8 @@
 import time
 import RPi.GPIO
 
+LED_pin = -1
+AUX_pin = -1
 # Dictionary storing all of the MC translations for the characters/numbers
 MORSE_CODE_DICT = { 'a':'.-', 'b':'-...',
                     'c':'-.-.', 'd':'-..', 'e':'.',
@@ -16,23 +18,23 @@ MORSE_CODE_DICT = { 'a':'.-', 'b':'-...',
                     '7':'--...', '8':'---..', '9':'----.',
                     '0':'-----'}
 
-with open("Morsecode/file.txt") as file: # Open the file we want to translate
+with open("file.txt") as file: # Open the file we want to translate
     lines=[line for line in file.readlines()] # Make array with each element being one line in the file
 
 print("Length of dot: ")
 LEN = input() # Asks user to input length of dot in terminal *doesn't do anything rn
 
 print("GPIO pin for output: ")
-PIN = input() # Asks user for pin to output to speaker or led *doesnt do anything rn
+cd = input() # Asks user for pin to output to speaker or led *doesnt do anything rn
 
-output_file = "Morsecode/output.txt" # Location of output file
+output_file = "output.txt" # Location of output file
 open("filename", "w").close() # Clears the file
 
 first_word = True # Don't add spaces if we are on the first word of the message (each line)
 with open(output_file, "w") as output: # Open the output file with write permissions
     output.write("-.-.- | attention \n") # Start by writing attention in MC
     for line in lines: # Loop through each line of the array made above
-        words = line.strip() # Removes any extra spacing in the line, so we only have the lines
+        words = line.lower().strip() # Removes any extra spacing in the line, so we only have the lines
         for word in words.split(" "): # Split the line into array of words to loop through
             chars = [*word] # Breaks the word into list of characters
             if first_word: # If it is the first word in the message, don't do anything and set it to false

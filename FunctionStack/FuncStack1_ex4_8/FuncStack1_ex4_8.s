@@ -7,12 +7,14 @@
 	.text
 	.global _start	
 _start:
+	mov r4, #5 @ Counter
 
 again:	mov	r2, #0x55	@ r2 = 0x55
 	bl	delay  	@ call delay (r14 = pc of next instruction)
 	mov	r2, #0xaa	@ r2 = 0xaa
 	bl	delay  	@ call delay 
-	b	again   	@ keep doing it
+	subs r4, r4, #1 @decrement counter
+	bne	again   	@ keep doing it
 
 	mov r7, #1
 	svc	0
@@ -21,5 +23,5 @@ again:	mov	r2, #0x55	@ r2 = 0x55
 delay:	ldr	r3, =5		@ r3 =5, modify this value for different delay 
 l1:	subs	r3, r3, #1	@ r3 = r3 - 1 
 	bne	l1
-	bx	lr		@ return to caller
+	mov	pc, lr		@ return to caller
 	@ --------------------end of delay subroutine

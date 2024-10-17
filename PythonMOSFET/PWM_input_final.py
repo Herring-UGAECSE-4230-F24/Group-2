@@ -61,6 +61,8 @@ try:
                 # Print current count and speed
                 print(counter)
                 print(f"Speed: {speed:.2f} turns/sec")
+
+                last_edge = current_time
                     
         # Update last clock state
         lastClkState = clkState
