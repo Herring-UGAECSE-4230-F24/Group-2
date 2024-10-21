@@ -1,8 +1,11 @@
 import time
 import RPi.GPIO
 
-LED_pin = -1
-AUX_pin = -1
+output_pin = 0
+dot_length = 0
+
+GPIO.setwarnings(False)  # Disable GPIO warnings
+GPIO.setmode(GPIO.BCM) 
 # Dictionary storing all of the MC translations for the characters/numbers
 MORSE_CODE_DICT = { 'a':'.-', 'b':'-...',
                     'c':'-.-.', 'd':'-..', 'e':'.',
@@ -22,14 +25,16 @@ with open("file.txt") as file: # Open the file we want to translate
     lines=[line for line in file.readlines()] # Make array with each element being one line in the file
 
 print("Length of dot: ")
-LEN = input() # Asks user to input length of dot in terminal *doesn't do anything rn
+dot_length = input() # Asks user to input length of dot in terminal *doesn't do anything rn
 
 print("GPIO pin for output: ")
-cd = input() # Asks user for pin to output to speaker or led *doesnt do anything rn
+output_pin = input() # Asks user for pin to output to speaker or led 
+GPIO.setup(output_pin, GPIO.OUT)
 
 output_file = "output.txt" # Location of output file
 open("filename", "w").close() # Clears the file
 
+# Convert message to morse code
 first_word = True # Don't add spaces if we are on the first word of the message (each line)
 with open(output_file, "w") as output: # Open the output file with write permissions
     output.write("-.-.- | attention \n") # Start by writing attention in MC
@@ -46,3 +51,26 @@ with open(output_file, "w") as output: # Open the output file with write permiss
             output.write(" | " + word + "\n") # Add the english translation and start new line
         first_word = True # Reset first_word to true since we move to the next message now
         output.write(".-.-. | out \n") # Write the MC for out 
+
+# Output morsecode
+with open(output_file, "r") as output:
+    for line in lines:
+        mc_by_letter = line.substring(0, line.indexOf("|" - 1)).split(" ")
+        print(mc_by_letter)
+        for letter in mc_by_letter:
+            for char in letter:
+                if char == "-":
+                    GPIO.output(output_pin, GPIO.HIGH)
+                    print("dash...")
+                    time.sleep(dot_length * 3)
+                    GPIO.output(output_pin, GPIO.LOW)
+                else:
+                    GPIO.output(output_pin, GPIO.HIGH)
+                    print("dot.")
+                    time.sleep(dot_length)
+                    GPIO.output(output_pin, GPIO.LOW)
+            print("wait...")
+            time.sleep(dot_length * 3)
+        print("wait.......")
+        time.sleep(dot_length * 7)
+        
