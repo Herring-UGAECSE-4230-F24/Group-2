@@ -1,5 +1,5 @@
 import time
-import RPi.GPIO
+import RPi.GPIO as GPIO
 
 output_pin = 0
 dot_length = 0
@@ -24,16 +24,17 @@ MORSE_CODE_DICT = { 'a':'.-', 'b':'-...',
 with open("file.txt") as file: # Open the file we want to translate
     lines=[line for line in file.readlines()] # Make array with each element being one line in the file
 
-print("Length of dot: ")
-dot_length = input() # Asks user to input length of dot in terminal *doesn't do anything rn
+while dot_length == 0 or dot_length > 2 or dot_length < 0.001:
+    print("Length of dot: ")
+    dot_length = int(input()) # Asks user to input length of dot in terminal *doesn't do anything rn
 
 print("GPIO pin for output: ")
-output_pin = input() # Asks user for pin to output to speaker or led 
+output_pin = int(input()) # Asks user for pin to output to speaker or led 
 GPIO.setup(output_pin, GPIO.OUT)
 
-output_file = "output.txt" # Location of output file
-open("filename", "w").close() # Clears the file
 
+output_file = "output.txt" # Location of output file
+open(output_file, "w").close() # Clears the file
 # Convert message to morse code
 first_word = True # Don't add spaces if we are on the first word of the message (each line)
 with open(output_file, "w") as output: # Open the output file with write permissions
@@ -52,10 +53,13 @@ with open(output_file, "w") as output: # Open the output file with write permiss
         first_word = True # Reset first_word to true since we move to the next message now
         output.write(".-.-. | out \n") # Write the MC for out 
 
+
 # Output morsecode
 with open(output_file, "r") as output:
     for line in lines:
-        mc_by_letter = line.substring(0, line.indexOf("|" - 1)).split(" ")
+        print(line)
+        print(line.index("|")- 1)
+        mc_by_letter = line[0: line.index("|")- 1].split(" ")
         print(mc_by_letter)
         for letter in mc_by_letter:
             for char in letter:
