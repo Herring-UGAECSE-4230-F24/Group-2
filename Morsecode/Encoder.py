@@ -25,14 +25,21 @@ with open("file.txt") as file: # Open the file we want to translate
     lines=[line for line in file.readlines()] # Make array with each element being one line in the file
 
 while dot_length == 0 or dot_length > 2 or dot_length < 0.001:
-    print("Length of dot: ")
+    print("Length of dot (must be between 0.001 and 2): ")
     dot_length = int(input()) # Asks user to input length of dot in terminal *doesn't do anything rn
 
-print("GPIO pin for output: ")
-output_pin = int(input()) # Asks user for pin to output to speaker or led 
+while True:
+    print("GPIO pin for output (must be between 1 and 26 *choose 12 for checkpoint): ")
+    output_pin = input() # Asks user for pin to output to speaker or led 
+    try: 
+        output_pin = int(output_pin)
+        if output_pin < 26 or output_pin > 1:
+            break
+    except:
+        pass
+
+
 GPIO.setup(output_pin, GPIO.OUT)
-
-
 output_file = "output.txt" # Location of output file
 open(output_file, "w").close() # Clears the file
 # Convert message to morse code
@@ -53,28 +60,35 @@ with open(output_file, "w") as output: # Open the output file with write permiss
         first_word = True # Reset first_word to true since we move to the next message now
         output.write(".-.-. | out \n") # Write the MC for out 
 
-
 # Output morsecode
-with open(output_file, "r") as output:
-    for line in lines:
-        print(line)
-        print(line.index("|")- 1)
-        mc_by_letter = line[0: line.index("|")- 1].split(" ")
-        print(mc_by_letter)
-        for letter in mc_by_letter:
-            for char in letter:
-                if char == "-":
-                    GPIO.output(output_pin, GPIO.HIGH)
-                    print("dash...")
-                    time.sleep(dot_length * 3)
-                    GPIO.output(output_pin, GPIO.LOW)
-                else:
-                    GPIO.output(output_pin, GPIO.HIGH)
-                    print("dot.")
-                    time.sleep(dot_length)
-                    GPIO.output(output_pin, GPIO.LOW)
-            print("wait...")
-            time.sleep(dot_length * 3)
-        print("wait.......")
-        time.sleep(dot_length * 7)
+try:
+    with open(output_file, "r") as output:
+        lines=[line for line in output.readlines()] 
+        for line in lines:
+            print(line)
+            #print(line.index("|")- 1)
+            mc_by_letter = line[0: line.index("|")- 1].split(" ")
+            print(mc_by_letter)
+            for letter in mc_by_letter:
+                for char in letter:
+                    if char == "-":
+                        GPIO.output(output_pin, GPIO.HIGH)
+                        print("dash...")
+                        time.sleep(dot_length * 3)
+                        GPIO.output(output_pin, GPIO.LOW)
+                    else:
+                        GPIO.output(output_pin, GPIO.HIGH)
+                        print("dot.")
+                        time.sleep(dot_length)
+                        GPIO.output(output_pin, GPIO.LOW)
+                    time.sleep(dot_length/4)
+                print("wait...")
+                GPIO.output(output_pin, GPIO.LOW)
+                time.sleep(dot_length * 3)
+            GPIO.output(output_pin, GPIO.LOW)
+            print("wait.......")
+            time.sleep(dot_length * 7)
+
+except KeyboardInterrupt:
+    GPIO.cleanup()
         
