@@ -72,20 +72,26 @@ try:
             for letter in mc_by_letter:
                 for char in letter:
                     if char == "-":
-                        GPIO.output(output_pin, GPIO.HIGH)
+                        #GPIO.output(output_pin, GPIO.HIGH)
+                        p = GPIO.PWM(output_pin, 500)
+                        p.start(50)
                         print("dash...")
                         time.sleep(dot_length * 3)
-                        GPIO.output(output_pin, GPIO.LOW)
+                        p.stop()
+                        #GPIO.output(output_pin, GPIO.LOW)
                     else:
-                        GPIO.output(output_pin, GPIO.HIGH)
+                        #GPIO.output(output_pin, GPIO.HIGH)
+                        p = GPIO.PWM(output_pin, 500)
+                        p.start(50)
                         print("dot.")
                         time.sleep(dot_length)
-                        GPIO.output(output_pin, GPIO.LOW)
+                        p.stop()
+                        #GPIO.output(output_pin, GPIO.LOW)
                     time.sleep(dot_length/4)
                 print("wait...")
-                GPIO.output(output_pin, GPIO.LOW)
+                #GPIO.output(output_pin, GPIO.LOW)
                 time.sleep(dot_length * 3)
-            GPIO.output(output_pin, GPIO.LOW)
+            #GPIO.output(output_pin, GPIO.LOW)
             print("wait.......")
             time.sleep(dot_length * 7)
 
