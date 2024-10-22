@@ -12,15 +12,13 @@ _start:
 	bl	myFunc		@ call a subroutine
 	add	r3, r0, r1		@ r3 = r0 + r1 = 0x125 + 0x144 = 0x269
 	add	r3, r3, r2		@ r3 = r3 + r2 = 0x269 + 0x56 = 0x2bf
-	mov	r7, #1
+end: mov	r7, #1
 	svc	0
 
 myFunc:
 	@ save r0, r1, and r2 on stack before they are used
-	str	r0, [r13, #-4]!	@ save r0 on stack
-	str	r1, [r13, #-4]!	@ save r1 on stack
-	str	r2, [r13, #-4]!	@ save r2 on stack
-    
+    push {r0-r2}
+
 	@ -------- modify r0, r1, and r2
 	mov	r0, #0	@ r0 = 0
 	mov	r1, #0	@ r1 = 0
@@ -28,8 +26,6 @@ myFunc:
 	@ --------
     
 	@ restore the original registers contents from stack
-	ldr	r2, [r13], #4	@ restore r2 from stack
-	ldr	r1, [r13], #4	@ restore r1 from stack
-	ldr	r0, [r13], #4	@ restore r0 from stack
+	pop {r0-r2}
 
 	bx	lr			@ return to caller
