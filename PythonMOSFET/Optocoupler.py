@@ -4,16 +4,21 @@ from time import sleep
 
 GPIO.setwarnings(False)
 GPIO.setmode(GPIO.BCM)
+#GPIO Number
 channel = 26
-frequency = 100
-desiredFrequency = 200
+
+#Changeable
+frequency = 5
+
 GPIO.setup(channel, GPIO.OUT)
+GPIO.output(channel, GPIO.HIGH)
 pwm=GPIO.PWM(channel, frequency)
-pwm.ChangeFrequecy(desiredFrequency)
+
 
 try:
     while True:
-        pwm.start()
+        #Duty Cycle
+        pwm.start(50)
 except KeyboardInterrupt:
     GPIO.cleanup()
     pwm.stop()

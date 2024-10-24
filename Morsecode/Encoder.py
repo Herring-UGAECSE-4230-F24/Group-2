@@ -26,10 +26,11 @@ with open("file.txt") as file: # Open the file we want to translate
 
 while dot_length == 0 or dot_length > 2 or dot_length < 0.001:
     print("Length of dot (must be between 0.001 and 2): ")
-    dot_length = int(input()) # Asks user to input length of dot in terminal *doesn't do anything rn
+    dot_length = float(input()) # Asks user to input length of dot in terminal *doesn't do anything rn
 
 while True:
-    print("GPIO pin for output (must be between 1 and 26 *choose 12 for checkpoint): ")
+
+    print("GPIO pin for output (must be between 1 and 26 *choose 20 for checkpoint): ")
     output_pin = input() # Asks user for pin to output to speaker or led 
     try: 
         output_pin = int(output_pin)
@@ -67,7 +68,7 @@ try:
         for line in lines:
             print(line)
             #print(line.index("|")- 1)
-            mc_by_letter = line[0: line.index("|")- 1].split(" ")
+            mc_by_letter = line[0: line.index("|")- 1].strip().split(" ")
             print(mc_by_letter)
             for letter in mc_by_letter:
                 for char in letter:
