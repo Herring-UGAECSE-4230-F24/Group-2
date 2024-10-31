@@ -7,7 +7,7 @@ GPIO.setwarnings(False)
 GPIO.setmode(GPIO.BCM)
 
 channel = 26 #GPIO Number
-frequency = .1 # Frequency sent to the motor that can be changed
+frequency = 1 # Frequency sent to the motor that can be changed
 
 # Setup GPIO
 GPIO.setup(channel, GPIO.OUT)
