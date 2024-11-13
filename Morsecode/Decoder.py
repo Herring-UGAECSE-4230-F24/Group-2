@@ -105,47 +105,45 @@ try:
         if a != -1:
           sum += a # add the length of the character
           break #break out of while loop to get to next i in for loop
-    dotLength = sum / 11 
+    dotLength = sum / 11 #find lengthof dot based on length of total attention length
     print(dotLength)
-    dashLength = 3 * dotLength
-    halfLength = (dashLength + dotLength)/2.0
+    dashLength = 3 * dotLength #dash length is 3* dot length
+    halfLength = (dashLength + dotLength)/2.0#halfway point is found in order have leeway between dot and dash
     letters = []
     temp = ''
     file.write('-.-.- | attention \n')
-    while True:
-      mcChar = telegraphInput()
+    
+    while True: #loop code will go through until out or keyboard exception
+      mcChar = telegraphInput() #call telegraphInput function to read high or low on GPIO
       print(mcChar)
-      if mcChar == -1:
+      if mcChar == -1: #no breaks, keep going
         continue
-      if mcChar == 'letter break':
+      if mcChar == 'letter break': #start of a new letter
         file.write(" ")
-        letters.append(temp)
+        letters.append(temp) #add the mc to letter array
         temp = ''
 
-      elif mcChar == 'word break':
-        letters.append(temp)
+      elif mcChar == 'word break': # end of wrod
+        letters.append(temp) #still add mc to letter array
         temp = ''
-        if letters != ['']:
-          file.write(" | ")
-          for l in letters:
-            if l in MC_TO_LETTER_DICT:
-            
-              file.write(MC_TO_LETTER_DICT[l])
-            else:
+        if letters != ['']: #make sure array not empty
+          file.write(" | ") 
+          for l in letters: #check if mc letter in dictionary
+            if l in MC_TO_LETTER_DICT: #if it is, print it out
+                file.write(MC_TO_LETTER_DICT[l])
+            else: #if not, write a ?
               file.write('?')
           file.write("\n")
-        letters = []
+        letters = [] #clear the array
       else:
-        temp = temp + mcChar
-        file.write(mcChar)
-        if temp == ".-.-.":
+        temp = temp + mcChar #temp is mc of letter and each dot or dash is added to temp
+        file.write(mcChar) #write each code character to file
+        if temp == ".-.-.": #check for out code
           file.write(" | out")
-          break
+          break #exit if out
       
-      time.sleep(0.01)
+      time.sleep(0.01) #small time delay to debouncy
 except:
-  #with open(output_file, 'w') as file:
-   # file.
   GPIO.cleanup()
 
 
