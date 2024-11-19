@@ -61,11 +61,14 @@ def telegraphInput(): #Function that monitors GPIO pin and returns duration of p
     elif length < halfLength:
       return '.'
   else: #returns how long a space is if nothing is pressed
-    print('else')
+    #print('else')
     start = time.time()
     time.sleep(0.01)
+    temp = start
     while GPIO.input(Telegraph) == GPIO.LOW:
-      pass
+      if time.time() - temp > 3*dotLength:
+        print("3 DOT")
+        temp = time.time()
     end = time.time()
     length = end - start
     if length >= 3 * dotLength and length < 7 * dotLength:
@@ -98,7 +101,7 @@ try:
     print("Sign Attention : ")
     sum = 0
     for i in range(5): # attention is -.-.- so i just loop through 5 characters
-      print(i)
+      #print(i)
       while True: # keep looping until it reads a high
         a = attentionIn()
         time.sleep(0.01)
