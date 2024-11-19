@@ -35,6 +35,7 @@ blade_counter_window = time.time()
 last_edge = 0
 lastClkState = GPIO.input(clk)
 print_rpm_time = time.time()
+same_blade = False
 try:
     while True:
         current_time = time.time()  # Get current
@@ -71,22 +72,28 @@ try:
                 print("Duty Cycle")
                 print(doodoo_cycle)
         
-        if GPIO.input(ir) == GPIO.HIGH:
-            if current_time - blade_counter_window < 1:
-                blade_counter += 1
-                #measured_rpm = (blade_counter*60)/((current_time-blade_counter_window)*(3))
-                #measured_rpm = blade_counter *20/(current_time - blade_counter_window)
-            else: 
-                blade_counter = 0
-                blade_counter_window = time.time()
-        
-        if current_time - print_rpm_time > 2:
-            print("Desired rpm = " + str(RPM))
-            measured_rpm = blade_counter *20
-            print("Measured rpm = " + str(measured_rpm))
-            print_rpm_time = current_time
+        if GPIO.input(ir) == GPIO.LOW:
+            
+            if same_blade:
+                pass
+            else:
+                print("High")
+                same_blade = True
+                if current_time - blade_counter_window >= 1:                  
+                    print(blade_counter)
+                    print("Desired rpm = " + str(RPM))
+                    measured_rpm = (blade_counter *20)/ (current_time - blade_counter_window)
+                    print("Measured rpm = " + str(measured_rpm))
+                    print_rpm_time = current_time
+                    blade_counter = 0
+                    blade_counter_window = time.time()
+                else: 
+                    blade_counter += 1
+        else:
+            same_blade = False
+
         lastClkState = clkState
-        time.sleep(0.01)
+        time.sleep(0.051)
 except KeyboardInterrupt:
     # Clean up GPIO on keyboard interrupt
     GPIO.cleanup()
