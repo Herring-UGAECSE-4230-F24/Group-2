@@ -21,7 +21,7 @@ MORSE_CODE_DICT = { 'a':'.-', 'b':'-...',
                     '7':'--...', '8':'---..', '9':'----.',
                     '0':'-----'}
 
-with open("file.txt") as file: # Open the file we want to translate
+with open("file.txt") as file: 
     lines=[line for line in file.readlines()] # Make array with each element being one line in the file
 
 while dot_length == 0 or dot_length > 2 or dot_length < 0.001:
@@ -29,7 +29,6 @@ while dot_length == 0 or dot_length > 2 or dot_length < 0.001:
     dot_length = float(input()) # Asks user to input length of dot in terminal *doesn't do anything rn
 
 while True:
-
     print("GPIO pin for output (must be between 1 and 26 *choose 20 for checkpoint): ")
     output_pin = input() # Asks user for pin to output to speaker or led 
     try: 
@@ -73,21 +72,17 @@ try:
             for letter in mc_by_letter:
                 for char in letter:
                     if char == "-":
-                        #GPIO.output(output_pin, GPIO.HIGH)
                         p = GPIO.PWM(output_pin, 500)
                         p.start(50)
                         print("dash...")
                         time.sleep(dot_length * 3)
                         p.stop()
-                        #GPIO.output(output_pin, GPIO.LOW)
                     else:
-                        #GPIO.output(output_pin, GPIO.HIGH)
                         p = GPIO.PWM(output_pin, 500)
                         p.start(50)
                         print("dot.")
                         time.sleep(dot_length)
                         p.stop()
-                        #GPIO.output(output_pin, GPIO.LOW)
                     time.sleep(dot_length/4)
                 print("wait...")
                 #GPIO.output(output_pin, GPIO.LOW)
