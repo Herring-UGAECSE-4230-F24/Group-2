@@ -9,9 +9,9 @@
 .equ    GPFSEL2, 0x08   @ function register offset
 .equ    GPCLR0, 0x28    @ clear register offset
 .equ    GPSET0, 0x1c    @ set register offset
-.equ    GPFSEL2_GPIO21_MASK, 0b111000   @ Mask for fn register
-.equ    MAKE_GPIO21_OUTPUT, 0b1000      @ use pin for ouput
-.equ    PIN, 21                         @ Used to set PIN high / low
+.equ    GPFSEL2_GPIO20_MASK, 0b111  @ Mask for fn register
+.equ    MAKE_GPIO20_OUTPUT, 0b001     @ use pin for ouput
+.equ    PIN, 20                         @ Used to set PIN high / low
 
 @ Args for mmap
 .equ    OFFSET_FILE_DESCRP, 0   @ file descriptor
@@ -57,8 +57,8 @@ main:
 @ Set up the GPIO pin funtion register in programming memory
     add     r0, r5, #GPFSEL2            @ calculate address for GPFSEL2
     ldr     r2, [r0]                    @ get entire GPFSEL2 register
-    bic     r2, r2, #GPFSEL2_GPIO21_MASK@ clear pin field
-    orr     r2, r2, #MAKE_GPIO21_OUTPUT @ enter function code
+    bic     r2, r2, #GPFSEL2_GPIO20_MASK@ clear pin field
+    orr     r2, r2, #MAKE_GPIO20_OUTPUT @ enter function code
     str     r2, [r0]                    @ update register
 
 
