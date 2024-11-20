@@ -22,7 +22,7 @@ GPIO.setup(channel, GPIO.OUT)
 GPIO.output(channel, GPIO.HIGH)
 
 RPM = 25 # RPM of motor
-frequency = RPM * 3/60
+frequency =  1 #RPM *3 /60
 on = True # Motor on or off
 rotary_encoder_pos = 1
 motor_pwm = GPIO.PWM(channel, frequency)
@@ -61,12 +61,12 @@ try:
                         rotary_encoder_pos -= 1 # Decrement counter
                 else:
                     rotary_encoder_pos += 1 # Increment counter
-                print(rotary_encoder_pos)
                 RPM = 25 * rotary_encoder_pos
-                frequency = RPM * 3/60
-                if doodoo_cycle < 100:
-                    doodoo_cycle = 1+ 0.1*RPM 
-                motor_pwm.ChangeFrequency(frequency)
+                #frequency = RPM * 3/60
+                if 1 * RPM/25  < 100:
+                    doodoo_cycle = 1 * RPM/25 
+                    #doodoo_cycle += 1
+                #motor_pwm.ChangeFrequency(frequency)
                 motor_pwm.ChangeDutyCycle(doodoo_cycle)
                 last_edge = current_time
                 print("Duty Cycle")
@@ -77,23 +77,23 @@ try:
             if same_blade:
                 pass
             else:
-                print("High")
+                #print("High")
                 same_blade = True
-                if current_time - blade_counter_window >= 1:                  
+                if current_time - blade_counter_window >= 2:                  
                     print(blade_counter)
                     print("Desired rpm = " + str(RPM))
-                    measured_rpm = (blade_counter *20)/ (current_time - blade_counter_window)
+                    measured_rpm = (blade_counter *200)/ (current_time - blade_counter_window)
                     print("Measured rpm = " + str(measured_rpm))
                     print_rpm_time = current_time
                     blade_counter = 0
-                    blade_counter_window = time.time()
+                    blade_counter_window = current_time
                 else: 
                     blade_counter += 1
         else:
             same_blade = False
 
         lastClkState = clkState
-        time.sleep(0.051)
+        time.sleep(0.035)
 except KeyboardInterrupt:
     # Clean up GPIO on keyboard interrupt
     GPIO.cleanup()
