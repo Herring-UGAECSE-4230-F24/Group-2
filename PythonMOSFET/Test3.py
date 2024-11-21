@@ -19,7 +19,7 @@ counter = 0 #counts falling edge from fan
 pressed = 1 #bool for on / off of fan
 
 rpm_desired = 0 #variable for user setting 
-duty = 0.41 #duty cycle 
+duty = 10 #duty cycle 
 
 GPIO.setmode(GPIO.BCM)
 GPIO.setup([clk,dt,sw], GPIO.IN)
@@ -32,8 +32,8 @@ def cw(self): #turning clock wise in the encoder
     global rpm_desired, duty, pressed
     rpm_desired += 25 #expected value
     if rpm_desired > 0:
-        if duty <= 96.5: #changes duty cycle since frequency does not affect it
-            duty += 0.61
+        if duty <= 99.5: #changes duty cycle since frequency does not affect it
+            duty += 0.41
         pwm.start(duty) #starts at new duty cycle
         pressed = 1
     if rpm_desired > 6000: 
@@ -41,8 +41,8 @@ def cw(self): #turning clock wise in the encoder
     
 def acw(self): #anti clock wise very similar to other function
     global rpm_desired, duty, pressed
-    rpm_desired -= 250
-    if duty >= 0.82: #limits duty cycle from being negative
+    rpm_desired -= 25
+    if duty >= 10: #limits duty cycle from being negative
         duty -= 0.41
     pwm.start(duty)
     pressed = 1 #ensures pressed state is correct with motor
@@ -86,7 +86,7 @@ try:
     while True: #prints speed
         speed = rotations.RPM() #calls RPM function
         data.append([rpm_desired, speed])
-        print(rpm_desired, speed) 
+        print("Desired: ", rpm_desired, "\n Measured: ", speed) 
         sleep(.5)
 
 except:
