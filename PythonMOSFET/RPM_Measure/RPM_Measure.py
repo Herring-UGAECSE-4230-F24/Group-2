@@ -1,6 +1,5 @@
 # Import necessary libraries for GPIO control and timing
 import RPi.GPIO as GPIO
-import pigpio
 import time
 import random
 
@@ -23,16 +22,14 @@ GPIO.setup(ir, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 GPIO.setup(channel, GPIO.OUT) 
 GPIO.output(channel, GPIO.HIGH)  # Set initial output state to HIGH
 
-# Initialize motor control variables
-RPM = 25  # Initial RPM of motor
-frequency = 1  # Frequency for PWM signal (calculated from RPM)
-on = True  # Motor state (on or off)
-rotary_encoder_pos = 1  # Position of the rotary encoder
-motor_pwm = GPIO.PWM(channel, frequency)  # Initialize PWM on the channel pin
-doodoo_cycle = 0.5  # Initial duty cycle for PWM
-motor_pwm.start(doodoo_cycle)  # Start PWM with initial duty cycle
-
 # Initialize variables for measuring RPM and debouncing inputs
+RPM = 25 # RPM of motor
+frequency =  1 # RPM *3 /60
+on = True # Motor on or off
+rotary_encoder_pos = 1
+motor_pwm = GPIO.PWM(channel, frequency)
+doodoo_cycle = 0.5
+motor_pwm.start(doodoo_cycle)
 measured_rpm = 0
 debounce = 0.002  # Debounce time in seconds to avoid false triggering
 blade_counter = 0  # Counter for blades passing the IR sensor
@@ -76,6 +73,7 @@ try:
                 
                 motor_pwm.ChangeDutyCycle(doodoo_cycle) # Change duty cycle 
                 last_edge = current_time  # Keep track of edge time
+                rotary_encoder_pos += 1 # Increment counter
                 print("Duty Cycle")
                 print(doodoo_cycle)
         
