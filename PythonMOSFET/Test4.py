@@ -37,6 +37,8 @@ last_edge = 0
 lastClkState = GPIO.input(clk)
 print_rpm_time = time.time()
 same_blade = False
+
+clkLastState = GPIO.input(clk)
 try:
     while True:
         current_time = time.time()  # Get current
@@ -44,7 +46,9 @@ try:
         clkState = GPIO.input(clk)
 
         if (current_time - last_edge) >= debounce:
-            
+            clkState = GPIO.input(clk)
+            dtState = GPIO.input(dt)
+                   
             if GPIO.input(sw) == GPIO.LOW:
                 print("press")
                 on = not on
@@ -53,15 +57,13 @@ try:
                 else:
                     motor_pwm.ChangeDutyCycle(0)
                 time.sleep(0.2)
-
-            elif (clkState == GPIO.LOW and lastClkState == GPIO.HIGH):
-
-                # Determine rotation direction
-                if GPIO.input(dt) == GPIO.LOW:
+            elif clkState != clkLastState:
+                if dtState != clkState:
+                    rotary_encoder_pos += 1 # Increment counter
+                else:
                     if rotary_encoder_pos >= 2:
                         rotary_encoder_pos -= 1 # Decrement counter
-                else:
-                    rotary_encoder_pos += 1 # Increment counter
+                clkLastState = clkState
                 RPM = 25 * rotary_encoder_pos
                 #frequency = RPM * 3/60
                 if 1 * RPM/25  < 100:
