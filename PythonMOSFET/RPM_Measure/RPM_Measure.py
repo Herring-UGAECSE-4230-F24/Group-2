@@ -28,8 +28,8 @@ frequency =  1 # RPM *3 /60
 on = True # Motor on or off
 rotary_encoder_pos = 1
 motor_pwm = GPIO.PWM(channel, frequency)
-doodoo_cycle = 0.5
-motor_pwm.start(doodoo_cycle)
+duty_cycle = 0.5
+motor_pwm.start(duty_cycle)
 measured_rpm = 0
 debounce = 0.002  # Debounce time in seconds to avoid false triggering
 blade_counter = 0  # Counter for blades passing the IR sensor
@@ -52,7 +52,7 @@ try:
                 on = not on  # Toggle motor state
                 
                 if on:
-                    motor_pwm.ChangeDutyCycle(doodoo_cycle)  # Resume motor operation
+                    motor_pwm.ChangeDutyCycle(duty_cycle)  # Resume motor operation
                 else:
                     motor_pwm.ChangeDutyCycle(0)  # Stop motor operation
                 
@@ -69,13 +69,13 @@ try:
                 RPM = 25 * rotary_encoder_pos  # Update RPM based on encoder position
                 
                 if RPM / 25 < 100:
-                    doodoo_cycle = 0.5 * RPM / 25 # Set duty cycle based on desired RPM
+                    duty_cycle = 0.5 * RPM / 25 # Set duty cycle based on desired RPM
                 
-                motor_pwm.ChangeDutyCycle(doodoo_cycle) # Change duty cycle 
+                motor_pwm.ChangeDutyCycle(duty_cycle) # Change duty cycle 
                 last_edge = current_time  # Keep track of edge time
                 rotary_encoder_pos += 1 # Increment counter
                 print("Duty Cycle")
-                print(doodoo_cycle)
+                print(duty_cycle)
         
         if GPIO.input(ir) == GPIO.LOW:  # Read from IR sensor
             if same_blade: # Don't do anything if still reading high (still on the same blade)
