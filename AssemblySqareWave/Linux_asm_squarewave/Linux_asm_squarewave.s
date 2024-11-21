@@ -83,7 +83,7 @@ loop:
     str     r2, [r0]        @ update register
     
 @ Delay
-    bl      delay2
+    bl      delay2     
 
     b       loop
 

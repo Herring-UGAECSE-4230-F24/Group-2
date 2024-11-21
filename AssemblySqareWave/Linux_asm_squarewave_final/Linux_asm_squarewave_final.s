@@ -83,12 +83,12 @@ loop:
     str     r2, [r0]        @ update register
     
 @ Delay
-    bl      delay2
+    bl      delay1
 
     b       loop
 
 delay1:
-    ldr     On_time, =750000        @ Time LED is ON
+    ldr     On_time, =45000        @ Time LED is ON
 l1: subs    On_time, On_time, #1    @ On_time = On_time - 1
     bne     l1
     mov     pc, lr                  @ return to caller

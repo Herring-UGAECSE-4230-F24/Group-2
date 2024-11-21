@@ -5,7 +5,7 @@ import RPi.GPIO as GPIO
 from Rotary import Rotary #pigpio rotary encoder import
 from Test2 import reader #pigpio rpm import
 import csv
-
+import random
 
 pi = pigpio.pi() #initializes pigpio
 
@@ -19,7 +19,7 @@ counter = 0 #counts falling edge from fan
 pressed = 1 #bool for on / off of fan
 
 rpm_desired = 0 #variable for user setting 
-duty = 10 #duty cycle 
+duty = 0.41 #duty cycle 
 
 GPIO.setmode(GPIO.BCM)
 GPIO.setup([clk,dt,sw], GPIO.IN)
