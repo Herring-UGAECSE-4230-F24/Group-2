@@ -33,7 +33,7 @@ def cw(self): #turning clock wise in the encoder
     rpm_desired += 25 #expected value
     if rpm_desired > 0:
         if duty <= 96.5: #changes duty cycle since frequency does not affect it
-            duty += 0.41
+            duty += 0.61
         pwm.start(duty) #starts at new duty cycle
         pressed = 1
     if rpm_desired > 6000: 
